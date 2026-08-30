@@ -1,0 +1,73 @@
+name: Build changed Pond packages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: dispatch-main-package-builds
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out Pond
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Dispatch changed package builds
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          before="$BEFORE_SHA"
+          after="$AFTER_SHA"
+          if [[ ! "$before" =~ ^[0-9a-f]{40}$ ]] ||
+             ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            before="$after^"
+          fi
+
+          mapfile -t package_paths < <(
+            find . -type f -name PKGBUILD -not -path './.git/*' -printf '%h\n' |
+              sed 's#^\./##' |
+              LC_ALL=C sort
+          )
+
+          declare -A package_bases=()
+          for package_path in "${package_paths[@]}"; do
+            package_base="${package_path##*/}"
+            if [[ -n "${package_bases[$package_base]:-}" ]]; then
+              printf 'error: duplicate package directory name: %s\n' "$package_base" >&2
+              exit 1
+            fi
+            package_bases["$package_base"]="$package_path"
+          done
+
+          changed=0
+          for package_path in "${package_paths[@]}"; do
+            if git diff --quiet "$before" "$after" -- "$package_path"; then
+              continue
+            fi
+
+            gh workflow run build.yml \
+              --ref main \
+              -f package_path="$package_path"
+            printf 'Dispatched %s\n' "$package_path"
+            changed=$((changed + 1))
+          done
+
+          printf 'Dispatched %s package build(s).\n' "$changed"
