@@ -8,9 +8,9 @@ post_install() {
 
     # Workaround if command is run inside chroot
     if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then
-        /usr/bin/snapper --no-dbus -c root create-config --template cachyos-root /
+        /usr/bin/snapper --no-dbus -c root create-config --template pond-root /
     else
-        /usr/bin/snapper -c root create-config --template cachyos-root /
+        /usr/bin/snapper -c root create-config --template pond-root /
     fi
 }
 
