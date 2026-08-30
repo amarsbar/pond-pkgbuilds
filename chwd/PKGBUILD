@@ -59,6 +59,8 @@ package() {
 
   cp -r profiles/pci "$pkgdir"/var/lib/chwd/db/
   cp -r profiles/usb "$pkgdir"/var/lib/chwd/db/
+
+  rm -r "$pkgdir/var/lib/chwd/db/pci/"{handhelds,t2-macbook}
 }
 
 # vim:set sw=2 sts=2 et:
