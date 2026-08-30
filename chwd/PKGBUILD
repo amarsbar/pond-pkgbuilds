@@ -4,7 +4,7 @@
 pkgname=chwd
 pkgver=1.24.1
 pkgrel=1
-pkgdesc="CachyOS Hardware Detection Tool"
+pkgdesc="Pond Hardware Detection Tool"
 arch=(x86_64)
 url="https://github.com/cachyos/chwd"
 license=(GPL-3.0-or-later)
@@ -13,7 +13,6 @@ makedepends=('git' 'cargo' 'lld' 'clang' 'llvm')
 provides=('chwd-db')
 replaces=('chwd-db')
 conflicts=('chwd-db')
-groups=('cachyos')
 source=("chwd::git+$url.git#tag=${pkgver}?signed")
 sha256sums=('0c4d343bed67d57aa33c7a15b3bab5222292ff28102d113e445d66b1c9f107c0')
 validpgpkeys=(
@@ -23,9 +22,7 @@ validpgpkeys=(
 prepare() {
   cd "$srcdir/$pkgname"
 
-  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-
-  cd scripts/chwd-kernel
+  sed -i 's/linux-cachyos/linux-pond/' profiles/pci/graphic_drivers/profiles.toml
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
@@ -40,11 +37,6 @@ build() {
   export RANLIB=llvm-ranlib
 
   export RUSTFLAGS="-Cembed-bitcode -C opt-level=3 -Ccodegen-units=1 -Clinker=clang -C link-arg=-flto -Clink-arg=-fuse-ld=/usr/bin/ld.lld"
-
-  cd scripts/chwd-kernel
-  cargo build --release --frozen
-
-  cd ../../
 
   cargo build --release --frozen
 }
@@ -67,9 +59,6 @@ package() {
 
   cp -r profiles/pci "$pkgdir"/var/lib/chwd/db/
   cp -r profiles/usb "$pkgdir"/var/lib/chwd/db/
-
-  cd scripts/chwd-kernel
-  install -Dm755 "target/release/chwd-kernel" "$pkgdir/usr/bin/chwd-kernel"
 }
 
 # vim:set sw=2 sts=2 et:

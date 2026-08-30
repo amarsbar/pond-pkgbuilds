@@ -1,10 +1,9 @@
 pkgbase = chwd
-	pkgdesc = CachyOS Hardware Detection Tool
+	pkgdesc = Pond Hardware Detection Tool
 	pkgver = 1.24.1
 	pkgrel = 1
 	url = https://github.com/cachyos/chwd
 	arch = x86_64
-	groups = cachyos
 	license = GPL-3.0-or-later
 	makedepends = git
 	makedepends = cargo
