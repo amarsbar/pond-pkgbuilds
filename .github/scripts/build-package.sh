@@ -15,10 +15,12 @@ package_path="$1"
 artifact_path="$2"
 repo_root="$(git rev-parse --show-toplevel)"
 
-[[ "$package_path" =~ ^[A-Za-z0-9@._+-]+$ ]] || die "unsafe package directory: $package_path"
+[[ "$package_path" =~ ^[A-Za-z0-9@._+-]+(/[A-Za-z0-9@._+-]+)*$ ]] ||
+  die "unsafe package directory: $package_path"
 [[ -f "$repo_root/$package_path/PKGBUILD" ]] || die "missing PKGBUILD: $package_path"
 
 package_dir="$(realpath "$repo_root/$package_path")"
+package_base="${package_path##*/}"
 artifact_dir="$(realpath -m "$artifact_path")"
 [[ "$package_dir" == "$repo_root/"* ]] || die 'package directory escaped the repository'
 
@@ -87,10 +89,10 @@ for filename in "${actual_files[@]}"; do
 done
 actual_files=("${normalized_files[@]}")
 
-manifest="$artifact_dir/manifest-$package_path.json"
+manifest="$artifact_dir/manifest-$package_base.json"
 filenames="$(jq -cn --args '$ARGS.positional' "${actual_files[@]}")"
 jq -n \
-  --arg package_base "$package_path" \
+  --arg package_base "$package_base" \
   --argjson filenames "$filenames" \
   '{
     schema: 1,
