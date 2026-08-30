@@ -1,0 +1,90 @@
+name: Build Pond package
+
+run-name: Build ${{ inputs.package_path }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_path:
+        description: "Package"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-build-${{ inputs.package_path }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: read
+
+    steps:
+      - name: Install workflow dependencies
+        run: pacman -Syu --needed --noconfirm git jq sudo
+
+      - name: Configure package compression
+        run: sed -i 's/^COMPRESSZST=.*/COMPRESSZST=(zstd -c -T0 --ultra -20 -)/' /etc/makepkg.conf
+
+      - name: Disable automatic debug packages
+        run: sed -i '/^OPTIONS=/s/\(^\|[[:space:]]\)debug\([[:space:]]\|)\)/\1!debug\2/' /etc/makepkg.conf
+
+      - name: Check out Pond
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Configure build user
+        run: |
+          useradd --create-home builder
+          printf 'builder ALL=(root) NOPASSWD: /usr/bin/pacman\n' >/etc/sudoers.d/pond-builder
+          chmod 0440 /etc/sudoers.d/pond-builder
+          install -d -o builder -g builder pond-artifacts
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+
+      - name: Build package
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+        run: |
+          sudo -u builder -H \
+            .github/scripts/build-package.sh \
+              "$PACKAGE_PATH" "pond-artifacts/$PACKAGE_PATH"
+
+      - name: Upload package files
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pond-packages-${{ inputs.package_path }}-${{ github.sha }}
+          path: pond-artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+  attest:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Download package files
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pond-packages-${{ inputs.package_path }}-${{ github.sha }}
+          path: pond-artifacts
+
+      - name: Attest package files and manifest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: |
+            pond-artifacts/**/*.pkg.tar.*
+            pond-artifacts/**/manifest-*.json
