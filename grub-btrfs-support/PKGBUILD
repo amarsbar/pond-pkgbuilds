@@ -7,7 +7,7 @@ pkgver=1.0.0
 pkgrel=1
 pkgdesc='Support package for enabling grub-btrfs support'
 arch=(any)
-url='https://github.com/amarsbar/pond-pkgbuilds
+url='https://github.com/amarsbar/pond-pkgbuilds'
 license=(GPL-3.0-or-later)
 depends=(
   pond-snapper-support
