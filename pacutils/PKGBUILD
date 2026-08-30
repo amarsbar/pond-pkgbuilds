@@ -1,0 +1,59 @@
+# Maintainer: Johannes Löthberg <johannes@kyriasis.com>
+
+pkgname=pacutils
+pkgver=0.15.0
+pkgrel=3
+pkgdesc='Helper tools for libalpm'
+url='https://github.com/andrewgregory/pacutils'
+arch=('x86_64')
+license=('MIT')
+
+depends=(
+  'glibc'
+  'libarchive'
+  'pacman'
+)
+makedepends=('git' 'perl')
+
+source=("git+https://github.com/andrewgregory/pacutils.git?signed#tag=v${pkgver}"
+        Add-PrettyProgressBar-config-option.patch
+        0001-Add-support-for-pacman-7.1.0.patch)
+sha256sums=('789b1ce9dfa6e6d6e0495651019cba121defa75eec598a63745c910de3371ac5'
+            '8b1bc6f26b53f584d94cf323e654942a38a87dc99fc97a715df0e7eb1d92ace4'
+            '54eead8b4c633aaf2c152be1c46c07bae929c87402633ce2ddaa0b7faf296f74')
+validpgpkeys=('0016846EDD8432261C62CB63DF3891463C352040')
+
+prepare() {
+  cd pacutils
+
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    msg2 "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
+}
+
+build() {
+  cd pacutils
+
+  export PATH="$PATH:/usr/bin/core_perl/"
+  make CFLAGS="$CFLAGS $LDFLAGS" SYSCONFDIR=/etc LOCALSTATEDIR=/var
+}
+
+check() {
+  cd pacutils
+  export PATH="$PATH:/usr/bin/core_perl/"
+  make check
+}
+
+package() {
+  cd pacutils
+  export PATH="$PATH:/usr/bin/core_perl/"
+  make DESTDIR="$pkgdir" PREFIX=/usr install
+  install -Dm644 COPYING "$pkgdir"/usr/share/licenses/"$pkgname"/COPYING
+}
+
+# vim: set ft=PKGBUILD et sw=2:
