@@ -1,0 +1,58 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: tinywrkb <tinywrkb@gmail.com>
+
+pkgname=power-profiles-daemon
+pkgver=0.30
+pkgrel=3
+pkgdesc='Makes power profiles handling available over D-Bus'
+url='https://gitlab.freedesktop.org/upower/power-profiles-daemon'
+license=(GPL-3.0-only)
+arch=(x86_64)
+depends=(gcc-libs
+         glib2
+         glibc
+         libgudev
+         polkit
+         upower)
+optdepends=('python-gobject: for powerprofilesctl'
+            'scx-scheds: for integration with scx_loader')
+makedepends=(bash-completion
+             git
+             glib2-devel
+             python-argparse-manpage
+             python-shtab
+             meson)
+checkdepends=(python-dbusmock
+              python-isort
+              python-mccabe
+              umockdev)
+source=(git+https://gitlab.freedesktop.org/upower/$pkgname#tag=$pkgver
+        0001-Add-support-for-scx_loader-modes-switching.patch)
+sha256sums=('e955e833b01cbff9b5b00349592239e58c559d717eb49f3371f42932676e7a40'
+            '33c66d8736a86dd57cb4317f9a91dc108e9f550423d9761a6d1d467ef584467e')
+
+prepare() {
+  cd $pkgname
+
+  # Add scx_loader integration
+  patch -Np1 -i ../0001-Add-support-for-scx_loader-modes-switching.patch
+}
+
+build() {
+  meson $pkgname build \
+    --prefix /usr \
+    --libexec lib \
+    --sysconfdir /usr/share \
+    -Dzshcomp=/usr/share/zsh/site-functions \
+    -Dbashcomp=enabled \
+    -Dmanpage=enabled
+  meson compile -C build
+}
+
+check() {
+  meson test -C build
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
