@@ -1,3 +1,3 @@
-[cachyos-ananicy-rules]
+[ananicy-rules]
 source = "git"
 git = "https://github.com/CachyOS/ananicy-rules.git"

@@ -1,18 +1,18 @@
-# Maintainer: Peter Jung ptr1337 <admin@ptr1337.dev>
-# Maintainer: Piotr Gorski <piotrgorski@cachyos.org>
-# Maintainer: Aarrayy <aarrayyzuelo@protonmail.com>
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+# Contributor: Peter Jung ptr1337 <admin@ptr1337.dev>
+# Contributor: Piotr Gorski <piotrgorski@cachyos.org>
+# Contributor: Aarrayy <aarrayyzuelo@protonmail.com>
 
-pkgname=cachyos-ananicy-rules
+pkgname=ananicy-rules
 _gitname=ananicy-rules
 pkgver=1.1.48
 pkgrel=1
 epoch=1
-pkgdesc='CachyOS - ananicy-rules'
+pkgdesc='Community process scheduling rules for ananicy-cpp'
 arch=('any')
 url='https://github.com/CachyOS/ananicy-rules'
 license=(GPL-3.0-or-later)
 makedepends=('git')
-groups=(cachyos)
 source=("${_gitname}::git+$url.git#tag=${pkgver}")
 sha256sums=('a06c2ba1b363e019061b43adaae90bf71c492a00d038ceb17aa6957133122958')
 replaces=(ananicy-rules-git)
