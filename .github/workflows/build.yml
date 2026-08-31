@@ -23,7 +23,7 @@ jobs:
     outputs:
       package_base: ${{ steps.package.outputs.base }}
     container:
-      image: archlinux:base-devel
+      image: archlinux:multilib-devel
     defaults:
       run:
         shell: bash
