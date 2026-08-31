@@ -1,0 +1,62 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+# Contributor: Peter Jung <admin@ptr1337.dev>
+
+_gitname=CachyOS-Settings
+pkgname=pond-system-optimizations
+pkgver=1.4.0
+pkgrel=1
+epoch=1
+arch=('any')
+license=(GPL-3.0-only ISC)
+makedepends=('coreutils' 'git')
+pkgdesc='System optimizations for Pond'
+url="https://github.com/CachyOS/$_gitname"
+source=("git+$url.git?signed#tag=$pkgver")
+install="$pkgname.install"
+sha256sums=('1c0323ef9a7cad57408bef6e0addb95ca05998057c28a8e97dfcf66c0856f2eb')
+validpgpkeys=(
+  E8B9AA39F054E30E8290D492C3C4820857F654FE  # Peter Jung <admin@ptr1337.dev>
+  B1B70BB1CD56047DEF31DE2EB62C3D10C54D5DA9  # Vladislav Nepogodin <nepogodin.vlad@gmail.com>
+)
+depends=(
+  zram-generator
+  ananicy-cpp
+  ananicy-rules
+  "systemd>=256"
+  iw # for setting proper regulatory
+  wireless-regdb
+)
+optdepends=('libluv: for topmem'
+            'lua-luv: for topmem'
+            'power-profiles-daemon: For game-performance')
+provides=('ntsync-common')
+prepare() {
+  cd $_gitname
+
+  rm -f \
+    etc/debuginfod/cachyos.urls \
+    usr/bin/cachyos-bugreport.sh \
+    usr/bin/paste-cachyos \
+    usr/share/glib-2.0/schemas/zz_cachyos.org.gnome.login-screen.gschema.override \
+    usr/share/icons/cachyos.svg
+
+  mv usr/lib/sysctl.d/70-cachyos-settings.conf \
+    usr/lib/sysctl.d/70-pond-system-optimizations.conf
+  mv usr/lib/systemd/system/cachyos-iw-set-regdomain.path \
+    usr/lib/systemd/system/pond-iw-set-regdomain.path
+  mv usr/lib/systemd/system/cachyos-iw-set-regdomain.service \
+    usr/lib/systemd/system/pond-iw-set-regdomain.service
+
+  sed -i \
+    -e 's/cachyos-iw-set-regdomain/pond-iw-set-regdomain/g' \
+    usr/lib/systemd/system/pond-iw-set-regdomain.path \
+    usr/lib/udev/rules.d/85-iw-regulatory.rules
+  sed -i 's/CachyOS game-performance/Pond game-performance/g' \
+    usr/bin/game-performance
+}
+package() {
+  install -d "$pkgdir/etc"
+  cp -rf "${srcdir}/${_gitname}/etc" "$pkgdir"
+  install -d "$pkgdir/usr"
+  cp -rf "${srcdir}/${_gitname}/usr" "$pkgdir"
+}
