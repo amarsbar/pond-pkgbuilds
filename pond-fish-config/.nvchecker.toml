@@ -1,0 +1,4 @@
+[pond-fish-config]
+source = "git"
+git = "https://github.com/amarsbar/pond-fish-config.git"
+prefix = "v"

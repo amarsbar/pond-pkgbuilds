@@ -1,0 +1,36 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-fish-config
+pkgver=1
+pkgrel=1
+pkgdesc="Fish configuration for Pond"
+arch=('any')
+url="https://github.com/amarsbar/pond-fish-config"
+license=('MIT')
+depends=(
+  bat
+  expac
+  eza
+  fastfetch
+  fish
+  fish-autopair
+  fish-pure-prompt
+  fisher
+  fzf
+  gum
+  pkgfile
+  tealdeer
+  ttf-fantasque-nerd
+)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('41ab0cefff4ac48f0d820dade697ecf49d96c0463d9ef2c3a01522be5691780c')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -D -m644 conf.d/done.fish $pkgdir/usr/share/pond-fish-config/conf.d/done.fish
+  install -D -m644 pond-config.fish $pkgdir/usr/share/pond-fish-config/pond-config.fish
+  install -D -m644 config.fish $pkgdir/etc/skel/.config/fish/config.fish
+}
+
+# vim:set sw=2 sts=2 et:

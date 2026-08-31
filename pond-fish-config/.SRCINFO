@@ -1,0 +1,24 @@
+pkgbase = pond-fish-config
+	pkgdesc = Fish configuration for Pond
+	pkgver = 1
+	pkgrel = 1
+	url = https://github.com/amarsbar/pond-fish-config
+	arch = any
+	license = MIT
+	depends = bat
+	depends = expac
+	depends = eza
+	depends = fastfetch
+	depends = fish
+	depends = fish-autopair
+	depends = fish-pure-prompt
+	depends = fisher
+	depends = fzf
+	depends = gum
+	depends = pkgfile
+	depends = tealdeer
+	depends = ttf-fantasque-nerd
+	source = pond-fish-config-1.tar.gz::https://github.com/amarsbar/pond-fish-config/archive/v1.tar.gz
+	sha256sums = 41ab0cefff4ac48f0d820dade697ecf49d96c0463d9ef2c3a01522be5691780c
+
+pkgname = pond-fish-config
