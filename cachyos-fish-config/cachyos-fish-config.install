@@ -1,9 +1,0 @@
-#!/bin/sh
-
-post_install() {
-  echo "Update your fish.config in /home/$USER/.config/fish/fish.config against the updated one"
-}
-
-post_upgrade() {
-post_install
-}
