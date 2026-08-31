@@ -1,0 +1,42 @@
+# Maintainer: Vladislav Nepogodin <nepogodin.vlad@gmail.com>
+# Maintainer: ptr1337 <admin@ptr1337.dev>
+
+pkgname=cachyos-fish-config
+pkgver=16
+pkgrel=1
+pkgdesc="Fish configuration of CachyOS"
+arch=('any')
+url="https://github.com/CachyOS/$pkgname"
+license=('MIT')
+depends=(
+  bat
+  expac
+  eza
+  fastfetch
+  fish
+  fish-autopair
+  fish-pure-prompt
+  fisher
+  fzf
+  pkgfile
+  tealdeer
+  ttf-fantasque-nerd
+)
+makedepends=(
+  git
+)
+conflicts=('kwin-scripts-window-colors')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+        "$pkgname.install")
+sha256sums=('97a0b603f393be3422465ff9e18f2d03ccfc33657b672de6ba89b3a3ac3b473d'
+            '931138b9c180bc35e97d76a10188e549b3c7e6caabd4755608ab4c213695a477')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -D -m644 conf.d/done.fish $pkgdir/usr/share/cachyos-fish-config/conf.d/done.fish
+  install -D -m644 cachyos-config.fish $pkgdir/usr/share/cachyos-fish-config/cachyos-config.fish
+  install -D -m644 config.fish $pkgdir/etc/skel/.config/fish/config.fish
+}
+
+# vim:set sw=2 sts=2 et:
