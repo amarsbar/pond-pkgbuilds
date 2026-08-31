@@ -37,7 +37,7 @@ mapfile -t valid_pgp_keys < <(
 )
 
 for fingerprint in "${valid_pgp_keys[@]}"; do
-  [[ "$fingerprint" =~ ^[0-9A-F]{40}$ ]] ||
+  [[ "$fingerprint" =~ ^[0-9A-Fa-f]{40}$ ]] ||
     die "invalid PGP fingerprint in PKGBUILD: $fingerprint"
   bundled_key="keys/pgp/$fingerprint.asc"
   if [[ -f "$bundled_key" ]]; then
