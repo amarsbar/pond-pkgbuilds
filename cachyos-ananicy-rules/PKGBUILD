@@ -1,0 +1,34 @@
+# Maintainer: Peter Jung ptr1337 <admin@ptr1337.dev>
+# Maintainer: Piotr Gorski <piotrgorski@cachyos.org>
+# Maintainer: Aarrayy <aarrayyzuelo@protonmail.com>
+
+pkgname=cachyos-ananicy-rules
+_gitname=ananicy-rules
+pkgver=1.1.48
+pkgrel=1
+epoch=1
+pkgdesc='CachyOS - ananicy-rules'
+arch=('any')
+url='https://github.com/CachyOS/ananicy-rules'
+license=(GPL-3.0-or-later)
+makedepends=('git')
+groups=(cachyos)
+source=("${_gitname}::git+$url.git#tag=${pkgver}")
+sha256sums=('a06c2ba1b363e019061b43adaae90bf71c492a00d038ceb17aa6957133122958')
+replaces=(ananicy-rules-git)
+provides=(ananicy-rules-git)
+conflicts=(ananicy-rules-git)
+
+prepare() {
+  cd "${_gitname}"
+  rm -f README.md
+}
+
+package() {
+  cd "${_gitname}"
+  install -d $pkgdir/etc/ananicy.d
+  cp -rf $srcdir/$_gitname/* $pkgdir/etc/ananicy.d
+  rm -f "$pkgdir/etc/ananicy.d/sort-games.sh"
+}
+
+# vim:set sw=2 sts=2 et:
