@@ -45,6 +45,24 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Configure Pond repository
+        run: |
+          fingerprint="$(
+            gpg --batch --show-keys --with-colons .github/keys/pond-repository.asc |
+              awk -F: '$1 == "fpr" { print $10; exit }'
+          )"
+          [[ "$fingerprint" == "B14C6E33AD2B9746842FFD245E3D63FCAA540F08" ]]
+          pacman-key --init
+          pacman-key --add .github/keys/pond-repository.asc
+          pacman-key --lsign-key "$fingerprint"
+          printf '%s\n' \
+            '' \
+            '[pond]' \
+            'SigLevel = Required' \
+            'Server = https://repo.butterfly.so/x86_64' \
+            >>/etc/pacman.conf
+          pacman -Syu --noconfirm
+
       - name: Resolve package identity
         id: package
         env:
