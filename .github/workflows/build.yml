@@ -37,6 +37,9 @@ jobs:
       - name: Configure package compression
         run: sed -i 's/^COMPRESSZST=.*/COMPRESSZST=(zstd -c -T0 --ultra -20 -)/' /etc/makepkg.conf
 
+      - name: Configure package metadata
+        run: printf '%s\n' 'PACKAGER="Ammar Hossain <ammar@butterfly.so>"' >>/etc/makepkg.conf
+
       - name: Disable automatic debug packages
         run: sed -i '/^OPTIONS=/s/\(^\|[[:space:]]\)debug\([[:space:]]\|)\)/\1!debug\2/' /etc/makepkg.conf
 
