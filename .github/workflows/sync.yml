@@ -19,7 +19,6 @@ jobs:
 
     env:
       GH_TOKEN: ${{ github.token }}
-      UPSTREAM_URL: https://github.com/CachyOS/CachyOS-PKGBUILDS.git
 
     steps:
       - name: Check out Pond
@@ -28,12 +27,23 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Fetch CachyOS
+      - name: Fetch CachyOS upstreams
         run: |
-          git remote add cachyos "$UPSTREAM_URL"
+          git remote add cachyos https://github.com/CachyOS/CachyOS-PKGBUILDS.git
           git fetch --no-tags cachyos master
+          git remote add cachyos-kernels https://github.com/CachyOS/linux-cachyos.git
+          git fetch --no-tags cachyos-kernels master
 
-      - name: Open package sync pull requests
+      - name: Open PKGBUILD sync pull requests
         env:
           POND_BRANCH: main
+          POND_UPSTREAM_REPOSITORY: CachyOS/CachyOS-PKGBUILDS
+          POND_PACKAGE_MAP: .github/cachyos-packages.tsv
         run: .github/scripts/sync-upstream.sh refs/remotes/cachyos/master
+
+      - name: Open kernel sync pull requests
+        env:
+          POND_BRANCH: main
+          POND_UPSTREAM_REPOSITORY: CachyOS/linux-cachyos
+          POND_PACKAGE_MAP: .github/linux-cachyos-packages.tsv
+        run: .github/scripts/sync-upstream.sh refs/remotes/cachyos-kernels/master

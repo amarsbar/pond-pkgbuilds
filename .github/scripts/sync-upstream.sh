@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly upstream_repository="CachyOS/CachyOS-PKGBUILDS"
-readonly package_map=".github/cachyos-packages.tsv"
+readonly upstream_repository="${POND_UPSTREAM_REPOSITORY:-CachyOS/CachyOS-PKGBUILDS}"
+readonly package_map="${POND_PACKAGE_MAP:-.github/cachyos-packages.tsv}"
 
 die() {
   printf 'error: %s\n' "$*" >&2
