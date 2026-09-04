@@ -169,11 +169,11 @@ _pkgsuffix=pond
 
 pkgbase="linux-$_pkgsuffix"
 _major=7.2
-_minor=2
+_minor=3
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
-_tagrel=1
+_tagrel=2
 pkgrel=1
 _srcname=cachyos-${_major}.${_minor}-${_tagrel}
 pkgdesc='Linux kernel with the selected downstream scheduler and performance patch set for Pond.'
@@ -806,7 +806,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('ef0dd68d31a0c51ec09c7025331ed821833965d04bead87151ec03e884ac48d699c098beea177e9a098d74d6f1c929def8052d1973712d60d213708f7c51d4ee'
+b2sums=('5531efbf7fa5b7b914c6530806b801d080be1471eef9a5b644c5d95d55a41c6c0e00fca7d62435bb139d27a63ac5e20b9399dcd6f6444058ad26053b51bdee34'
         'SKIP'
         '56275d3bf511ee220e49a8a445d55bb4dfdfa8f27e263691ddd7c0de69690725e4abadbdf62c2c82599cf7b2bfb3f09144e3c1e05078cf55b89091f625aea841'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e'
