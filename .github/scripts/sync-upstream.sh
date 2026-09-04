@@ -52,6 +52,11 @@ mapped_tree() {
       git read-tree --prefix="$pond_path/" "$upstream_commit:$upstream_path"
   fi
 
+  # .SRCINFO is derived from PKGBUILD and regenerated at build time; merging
+  # it textually conflicts on every upstream bump, so keep it out of the sync.
+  GIT_INDEX_FILE="$index_file" git rm -r -f --cached --ignore-unmatch \
+    -- ":(glob)$pond_path/**/.SRCINFO" >/dev/null
+
   tree="$(GIT_INDEX_FILE="$index_file" git write-tree)"
   rm -f "$index_file"
   printf '%s\n' "$tree"
