@@ -4,7 +4,8 @@ cachyos-settings	pond-system-optimizations
 cachyos-snapper-support	pond-snapper-support
 grub-btrfs-support	grub-btrfs-support
 intel-lpmd	intel-lpmd
-mesa	mesa
+mesa/lib32-mesa	mesa/lib32-mesa
+mesa/mesa	mesa/mesa
 nvidia	nvidia
 pacutils	pacutils
 power-profiles-daemon	power-profiles-daemon
