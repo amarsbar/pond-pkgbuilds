@@ -102,7 +102,8 @@ apply_upstream_commit() {
   upstream_subject="$(git show -s --format=%s "$upstream_commit")"
   commit_subject="$(sed -E 's/ \(#[0-9]+\)$//' <<<"$upstream_subject")"
   commit_body="Upstream-Repository: $upstream_repository
-Upstream-Commit: $upstream_commit"
+Upstream-Commit: $upstream_commit
+Upstream-URL: https://redirect.github.com/$upstream_repository/commit/$upstream_commit"
 
   if [[ "$upstream_subject" =~ \(\#([0-9]+)\)$ ]]; then
     upstream_pr_number="${BASH_REMATCH[1]}"
