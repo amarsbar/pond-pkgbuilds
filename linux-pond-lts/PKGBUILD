@@ -180,7 +180,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=610.57.04
+_nv_ver=615.71.09
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -747,4 +747,4 @@ done
 b2sums=('eba5ee0299dcba566706feb1af00f58bb49bf5f8b20463f2bb6f279fb5e4e3834259cc85f787e208238eeeb42a09a184664ecb01635e1c273e299d474e81a6e5'
         'SKIP'
         '3fc6db2b7e863e2b3e458121273c93ac91f792e3b30bc90ec2ee4b45af5a20f8d5ecfe2636daab53465fe58b09b92a799679a7b46ca4f8396f9da9c3da3b8404'
-        '59bd5799cb37bdd264a683bb170efd81d3c57381d8ffa5f4cdb0e6c556f61b4485c88b3ec6513cf4e57c975d9ff9c07111463a5b50a213a6178f0530cf40dcd7')
+        'f4d2e1386336214468d686271565feccebc297a7b203ab44a02a447907c886a8991114bd47b7ed464557e4c519b1ac2297af116d5a6599d1967b6be864f1bcb5')
