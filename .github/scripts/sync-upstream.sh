@@ -60,6 +60,61 @@ mapped_tree() {
   printf '%s\n' "$tree"
 }
 
+# Only literal checksum arrays are automatic; unfamiliar shell expressions need review.
+without_checksums() {
+  awk '
+    /^[ \t]*(ck|md5|sha1|sha224|sha256|sha384|sha512|b2)sums(_[a-zA-Z0-9_]+)?\+?=\(/ {
+      name = $0; sub(/\+?=.*/, "", name); gsub(/^[ \t]+/, "", name)
+      if (seen[name]++) exit 1
+      print name "=(\047SKIP\047)"
+      active = 1; sub(/^[^(]*\(/, "")
+    }
+    active {
+      sub(/#.*/, "")
+      end = /\)/
+      gsub(/[\047\042]/, ""); gsub(/SKIP|[[:xdigit:][:space:]()]/, "")
+      if (length($0)) exit 1
+      if (end) active = 0
+      next
+    }
+    { print }
+    END { if (active) exit 1 }
+  ' "$1"
+}
+
+merge_pkgbuild_checksums() {
+  local scratch="$1" recipe="$2" directory="${2%/*}" side
+
+  # A conflicted source file must be resolved before its checksum is calculated.
+  if awk -v directory="$directory/" -v recipe="$recipe" \
+    'index($0, directory) == 1 && $0 != recipe { found = 1 } END { exit !found }' \
+    "$scratch/conflicts"; then
+    return 1
+  fi
+  for side in ours base incoming; do
+    without_checksums "$scratch/$side/$recipe" >"$scratch/$side.recipe" || return 1
+  done
+  git merge-file -p -L Pond -L base -L upstream \
+    "$scratch/ours.recipe" "$scratch/base.recipe" "$scratch/incoming.recipe" \
+    >"$scratch/merged/$recipe" || return 1
+
+  # makepkg downloads the sources and regenerates every checksum, without building.
+  (
+    cd "$scratch/merged/$directory" || exit 1
+    env -i PATH="$PATH" HOME="$scratch" \
+      makepkg --geninteg --nocolor CARCH=x86_64
+  ) >"$scratch/checksums" || return 1
+  awk -v checksums="$scratch/checksums" '
+    /^[a-z0-9_]+sums(_[a-zA-Z0-9_]+)?=\(/ {
+      if (!written++) while ((getline line < checksums) > 0) print line
+      next
+    }
+    { print }
+    END { if (!written) while ((getline line < checksums) > 0) print line }
+  ' "$scratch/merged/$recipe" >"$scratch/result" || return 1
+  cp "$scratch/result" "$recipe"
+}
+
 apply_upstream_commit() {
   local upstream_commit="$1"
   local upstream_path="$2"
@@ -76,6 +131,7 @@ apply_upstream_commit() {
   local commit_body
   local upstream_pr_number
   local merged_by
+  local merge_status=0 scratch side recipe
 
   parent="$(git rev-parse "$upstream_commit^1")"
   base_tree="$(mapped_tree "$parent" "$upstream_path" "$pond_path")"
@@ -83,21 +139,49 @@ apply_upstream_commit() {
   base_commit="$(printf 'base\n' | git commit-tree "$base_tree")"
   incoming_commit="$(printf 'incoming\n' | git commit-tree "$incoming_tree")"
 
-  if ! merge_output="$(
-    git merge-tree \
-      --write-tree \
-      --messages \
-      --merge-base="$base_commit" \
-      HEAD \
-      "$incoming_commit"
-  )"; then
-    printf '%s\n' "$merge_output" >&2
-    return 1
-  fi
-
+  merge_output="$(
+    git merge-tree --write-tree --messages --name-only \
+      --merge-base="$base_commit" HEAD "$incoming_commit"
+  )" || merge_status=$?
+  ((merge_status <= 1)) || return 1
   merged_tree="${merge_output%%$'\n'*}"
   [[ "$merged_tree" =~ ^[0-9a-f]{40,64}$ ]] || return 1
-  git read-tree --reset -u "$merged_tree"
+
+  scratch="$(mktemp -d)"
+  # merge-tree provides both the conflicted tree and the paths needing resolution.
+  sed '1d; /^$/,$d' <<<"$merge_output" >"$scratch/conflicts"
+  for side in ours base incoming merged; do
+    mkdir "$scratch/$side"
+    case "$side" in
+      ours) recipe=HEAD ;;
+      base) recipe="$base_tree" ;;
+      incoming) recipe="$incoming_tree" ;;
+      merged) recipe="$merged_tree" ;;
+    esac
+    git archive "$recipe" -- "$pond_path" | tar -x -C "$scratch/$side" || {
+      rm -rf "$scratch"
+      return 1
+    }
+  done
+  git read-tree --reset -u "$merged_tree" || { rm -rf "$scratch"; return 1; }
+
+  while IFS= read -r recipe; do
+    [[ "${recipe##*/}" == PKGBUILD ]] || continue
+    [[ -f "$scratch/base/$recipe" && -f "$scratch/ours/$recipe" && -f "$recipe" ]] || continue
+    git diff --quiet HEAD "$merged_tree" -- "${recipe%/*}" && continue
+    if merge_pkgbuild_checksums "$scratch" "$recipe"; then
+      awk -v path="$recipe" '$0 != path' "$scratch/conflicts" >"$scratch/remaining"
+      mv "$scratch/remaining" "$scratch/conflicts"
+    else
+      printf 'Unable to refresh checksums for %s; including it in the PR for resolution.\n' "$recipe" >&2
+      sync_review+="$recipe (checksum or recipe resolution required)"$'\n'
+    fi
+  done < <(git ls-tree -r --name-only "$incoming_tree" -- "$pond_path")
+  while IFS= read -r recipe; do
+    sync_review+="$recipe"$'\n'
+  done <"$scratch/conflicts"
+  rm -rf "$scratch"
+  git add -A -- "$pond_path" || return 1
 
   upstream_subject="$(git show -s --format=%s "$upstream_commit")"
   commit_subject="$(sed -E 's/ \(#[0-9]+\)$//' <<<"$upstream_subject")"
@@ -116,7 +200,7 @@ Upstream-URL: https://redirect.github.com/$upstream_repository/commit/$upstream_
   fi
 
   git commit --quiet --allow-empty \
-    -m "$commit_subject" -m "$commit_body"
+    -m "$commit_subject" -m "$commit_body" || return 1
 
   printf 'Applied %s to %s as %s\n' \
     "$upstream_commit" "$pond_path" "$(git rev-parse HEAD)"
@@ -131,6 +215,7 @@ sync_package() {
   local pr_number
   local body_file
   local upstream_commits
+  local sync_review=''
 
   cursor="$(last_upstream_commit "$pond_path")"
   git cat-file -e "$cursor^{commit}" 2>/dev/null || {
@@ -150,7 +235,13 @@ sync_package() {
 
   branch_name="bot/sync/${pond_path//\//-}"
   git check-ref-format --branch "$branch_name" >/dev/null
-  git checkout --quiet -B "$branch_name" "origin/$branch"
+  pr_number="$(
+    gh pr list --base "$branch" --head "$branch_name" --state open \
+      --json number --jq '.[0].number // empty'
+  )" || return 1
+  git fetch --no-tags origin \
+    "+refs/heads/$branch_name:refs/remotes/origin/$branch_name" 2>/dev/null || true
+  git checkout --quiet -B "$branch_name" "origin/$branch" || return 1
 
   mapfile -t upstream_commits < <(
     git rev-list --reverse --first-parent \
@@ -158,10 +249,7 @@ sync_package() {
   )
 
   for upstream_commit in "${upstream_commits[@]}"; do
-    apply_upstream_commit "$upstream_commit" "$upstream_path" "$pond_path" || {
-      printf 'unable to merge %s into %s\n' "$upstream_commit" "$pond_path" >&2
-      return 1
-    }
+    apply_upstream_commit "$upstream_commit" "$upstream_path" "$pond_path" || return 1
   done
 
   if git diff --quiet "origin/$branch" HEAD; then
@@ -169,10 +257,7 @@ sync_package() {
     return 0
   fi
 
-  git fetch --no-tags origin \
-    "+refs/heads/$branch_name:refs/remotes/origin/$branch_name" \
-    2>/dev/null || true
-  git push --force-with-lease origin "HEAD:refs/heads/$branch_name"
+  git push --force-with-lease origin "HEAD:refs/heads/$branch_name" || return 1
 
   body_file="$(mktemp)"
   {
@@ -181,27 +266,22 @@ sync_package() {
     printf -- '- Pond path: `%s`\n' "$pond_path"
     printf -- '- Previous upstream commit: `%s`\n' "$cursor"
     printf -- '- Current upstream commit: `%s`\n' "$(git rev-parse "$upstream_ref")"
+    if [[ -n "$sync_review" ]]; then
+      printf '\nSome changes need conflict resolution or checksum regeneration:\n\n'
+      printf '%s' "$sync_review" | sort -u | sed 's/^/- /'
+    fi
   } >"$body_file"
-
-  pr_number="$(
-    gh pr list \
-      --base "$branch" \
-      --head "$branch_name" \
-      --state open \
-      --json number \
-      --jq '.[0].number // empty'
-  )"
 
   if [[ -n "$pr_number" ]]; then
     gh pr edit "$pr_number" \
       --title "$pond_path: sync CachyOS updates" \
-      --body-file "$body_file"
+      --body-file "$body_file" || { rm -f "$body_file"; return 1; }
   else
     gh pr create \
       --base "$branch" \
       --head "$branch_name" \
       --title "$pond_path: sync CachyOS updates" \
-      --body-file "$body_file"
+      --body-file "$body_file" || { rm -f "$body_file"; return 1; }
   fi
 
   rm -f "$body_file"
@@ -257,6 +337,7 @@ for index in "${!upstream_paths[@]}"; do
   git checkout --quiet -B "$branch" "origin/$branch"
   if ! sync_package "${upstream_paths[$index]}" "${pond_paths[$index]}"; then
     failures+=("${pond_paths[$index]}")
+    git read-tree --reset -u HEAD
   fi
 done
 
