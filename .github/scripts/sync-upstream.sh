@@ -82,8 +82,24 @@ without_checksums() {
   ' "$1"
 }
 
-merge_pkgbuild_checksums() {
+pkgbuild_version() {
+  (
+    cd "$1" || exit 1
+    env -i PATH="$PATH" HOME="$2" makepkg --printsrcinfo CARCH=x86_64
+  ) | awk '
+    $1 == "epoch" { epoch = $3 }
+    $1 == "pkgver" { version = $3 }
+    $1 == "pkgrel" { release = $3 }
+    END {
+      if (!version || release !~ /^[0-9]+([.][0-9]+)?$/) exit 1
+      print (epoch ? epoch : 0) ":" version "-" release
+    }
+  '
+}
+
+merge_pkgbuild() {
   local scratch="$1" recipe="$2" directory="${2%/*}" side
+  local pkgrel ours_version merged_version
 
   # A conflicted source file must be resolved before its checksum is calculated.
   if awk -v directory="$directory/" -v recipe="$recipe" \
@@ -91,12 +107,35 @@ merge_pkgbuild_checksums() {
     "$scratch/conflicts"; then
     return 1
   fi
+  # Merge recipe changes independently of Pond's distribution revision.
+  pkgrel="$(sed -n 's/^pkgrel=//p' "$scratch/incoming/$recipe")"
+  [[ "$pkgrel" =~ ^[0-9]+([.][0-9]+)?$ ]] || return 1
   for side in ours base incoming; do
     without_checksums "$scratch/$side/$recipe" >"$scratch/$side.recipe" || return 1
+    sed -i -E "s/^pkgrel=.*/pkgrel=$pkgrel/" "$scratch/$side.recipe" || return 1
   done
   git merge-file -p -L Pond -L base -L upstream \
     "$scratch/ours.recipe" "$scratch/base.recipe" "$scratch/incoming.recipe" \
     >"$scratch/merged/$recipe" || return 1
+
+  ours_version="$(pkgbuild_version "$scratch/ours/$directory" "$scratch")" || return 1
+  merged_version="$(pkgbuild_version "$scratch/merged/$directory" "$scratch")" || return 1
+  if [[ "${ours_version%-*}" == "${merged_version%-*}" ]] &&
+    (( $(vercmp "$merged_version" "$ours_version") <= 0 )); then
+    pkgrel="${ours_version##*-}"
+    sed -i -E "s/^pkgrel=.*/pkgrel=$pkgrel/" "$scratch/merged/$recipe" || return 1
+    refresh_pkgbuild_checksums "$scratch" "$recipe" || return 1
+    # An upstream revision catching up with Pond needs no rebuild by itself.
+    git diff --quiet HEAD -- "$directory" && return 0
+    pkgrel="$((10#${pkgrel%%.*} + 1))"
+    sed -i -E "s/^pkgrel=.*/pkgrel=$pkgrel/" "$scratch/merged/$recipe" || return 1
+    printf '%s: bumping pkgrel to %s for changed package content.\n' "$recipe" "$pkgrel"
+  fi
+  refresh_pkgbuild_checksums "$scratch" "$recipe"
+}
+
+refresh_pkgbuild_checksums() {
+  local scratch="$1" recipe="$2" directory="${2%/*}"
 
   # makepkg downloads the sources and regenerates every checksum, without building.
   (
@@ -169,11 +208,11 @@ apply_upstream_commit() {
     [[ "${recipe##*/}" == PKGBUILD ]] || continue
     [[ -f "$scratch/base/$recipe" && -f "$scratch/ours/$recipe" && -f "$recipe" ]] || continue
     git diff --quiet HEAD "$merged_tree" -- "${recipe%/*}" && continue
-    if merge_pkgbuild_checksums "$scratch" "$recipe"; then
+    if merge_pkgbuild "$scratch" "$recipe"; then
       awk -v path="$recipe" '$0 != path' "$scratch/conflicts" >"$scratch/remaining"
       mv "$scratch/remaining" "$scratch/conflicts"
     else
-      printf 'Unable to refresh checksums for %s; including it in the PR for resolution.\n' "$recipe" >&2
+      printf 'Unable to merge recipe and refresh checksums for %s; including it in the PR for resolution.\n' "$recipe" >&2
       sync_review+="$recipe (checksum or recipe resolution required)"$'\n'
     fi
   done < <(git ls-tree -r --name-only "$incoming_tree" -- "$pond_path")
