@@ -1,0 +1,9 @@
+#!/bin/sh
+# The one way the Pond boot menu is regenerated: kernel updates, theme updates
+# and the first boot all run this.
+set -e
+mkdir -p /boot/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+# GRUB titles entries "<distributor> Linux, with Linux <kernel>"; Pond's are shorter.
+sed -i -e "s/^menuentry 'Pond Linux, with Linux linux-pond-lts\([^']*\)'/menuentry 'Pond Linux LTS\1'/" \
+       -e "s/^menuentry 'Pond Linux, with Linux linux-pond\([^']*\)'/menuentry 'Pond\1'/" /boot/grub/grub.cfg

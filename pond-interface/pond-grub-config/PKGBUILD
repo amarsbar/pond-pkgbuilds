@@ -1,0 +1,33 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+pkgname=pond-grub-config
+pkgver=0.1
+pkgrel=1
+pkgdesc='Pond GRUB configuration, theme and menu integration'
+arch=('any')
+url='https://github.com/bflycomputer/pond-interface'
+license=('BSD-3-Clause' 'OFL-1.1')
+depends=('grub' 'os-prober')
+backup=(etc/default/grub)
+source=(
+  "$url/releases/download/grub-v$pkgver/pond-grub-$pkgver.tar.xz"
+  'pond-grub.hook'
+  'pond-grub-update'
+)
+sha256sums=('e29626c5446911e2440e998d4aad8c46bf0f37600afbe3d210ed3a6d7b696578'
+            '4bc2609cd458a46d99f2c17f41dbcc9261d5d948de1363d0196e64a3fc20a377'
+            '96a677eeac179484c1c0c6611d4c2ef1dd728078893bc84c792b8653f69883fe')
+
+package() {
+  cd "$srcdir/pond-grub-$pkgver"
+  local theme_dir="$pkgdir/usr/share/grub/themes/pond"
+  install -d "$theme_dir/f" "$theme_dir/assets"
+  install -m644 layouts/*.txt "$theme_dir/"
+  install -m644 assets/fonts/*.pf2 "$theme_dir/f/"
+  cp -r assets/[0-9]* "$theme_dir/assets/"
+  install -Dm644 grub.default "$pkgdir/etc/default/grub"
+  install -Dm755 05_pond_theme "$pkgdir/etc/grub.d/05_pond_theme"
+  install -Dm644 "$srcdir/pond-grub.hook" "$pkgdir/usr/share/libalpm/hooks/pond-grub.hook"
+  install -Dm755 "$srcdir/pond-grub-update" "$pkgdir/usr/share/libalpm/scripts/pond-grub-update"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 assets/fonts/OFL-Onest.txt "$pkgdir/usr/share/licenses/$pkgname/OFL-Onest.txt"
+}

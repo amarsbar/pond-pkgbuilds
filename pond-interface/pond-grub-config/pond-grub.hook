@@ -1,0 +1,18 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = pond-grub-config
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Path
+Target = usr/lib/modules/*/vmlinuz
+
+[Action]
+Description = Regenerating the Pond boot menu...
+When = PostTransaction
+Depends = grub
+Exec = /usr/share/libalpm/scripts/pond-grub-update
