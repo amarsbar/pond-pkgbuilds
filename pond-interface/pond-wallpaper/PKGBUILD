@@ -1,0 +1,30 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-wallpaper
+pkgver=0.0
+pkgrel=1
+pkgdesc='Pond Daylight and custom wallpaper renderer'
+arch=('any')
+url='https://github.com/bflycomputer/pond-interface'
+license=('BSD-3-Clause')
+depends=('qt6-declarative>=6.11' 'qt6-wayland' 'quickshell>=0.3.1')
+makedepends=('qt6-shadertools')
+
+_commit=99b56c396362bea979e53d88df52450216b28f9f
+source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
+sha256sums=('6a32d672a1c5e8c1ca73251ad90664e102ad7566069ea918f42a7347f5c562d7')
+
+build() {
+  cd "pond-interface-$_commit/wallpaper/daylight"
+  /usr/lib/qt6/bin/qsb --qt6 -o sky.frag.qsb sky.frag
+}
+
+package() {
+  cd "pond-interface-$_commit"
+  install -Dm644 wallpaper/daylight/{Sky.qml,SkyState.js,qmldir,sky.frag.qsb} \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/Daylight"
+  install -Dm644 wallpaper/daylight/shell.qml "$pkgdir/usr/share/pond-interface/wallpaper/daylight/shell.qml"
+  install -d "$pkgdir/etc/xdg/quickshell"
+  ln -s /usr/share/pond-interface/wallpaper/daylight "$pkgdir/etc/xdg/quickshell/pond-wallpaper"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

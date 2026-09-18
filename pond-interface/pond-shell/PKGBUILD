@@ -1,0 +1,48 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-shell
+pkgver=0.0
+pkgrel=1
+pkgdesc='Pond desktop shell for niri'
+arch=('any')
+url='https://github.com/bflycomputer/pond-interface'
+license=('BSD-3-Clause')
+depends=(
+  'bluez'
+  'brightnessctl'
+  'ddcutil'
+  'fastfetch'
+  'gdk-pixbuf2'
+  'iw'
+  'networkmanager'
+  'niri'
+  'pipewire'
+  'pond-lockscreen'
+  'pond-wallpaper'
+  'python'
+  'python-gobject'
+  'qt6-declarative>=6.11'
+  'qt6-svg'
+  'qt6-wayland'
+  'quickshell>=0.3.1'
+  'systemd'
+  'ttf-advent-pro'
+  'ttf-ibm-plex'
+  'ttf-onest'
+  'upower'
+  'zenity'
+)
+
+_commit=99b56c396362bea979e53d88df52450216b28f9f
+source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
+sha256sums=('6a32d672a1c5e8c1ca73251ad90664e102ad7566069ea918f42a7347f5c562d7')
+
+package() {
+  cd "pond-interface-$_commit"
+  find shell -type f \( -name '*.qml' -o -name '*.js' -o -name 'qmldir' \
+    -o -name '*.svg' -o -name '*.png' -o -name '*.py' \) \
+    -exec install -Dm644 '{}' "$pkgdir/usr/share/pond-interface/{}" \;
+  install -d "$pkgdir/etc/xdg/quickshell"
+  ln -s /usr/share/pond-interface/shell "$pkgdir/etc/xdg/quickshell/pond-default"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
