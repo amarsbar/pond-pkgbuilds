@@ -1,17 +1,17 @@
 pkgbase = pond-grub-config
 	pkgdesc = Pond GRUB configuration, theme and menu integration
 	pkgver = 0.1
-	pkgrel = 2
+	pkgrel = 3
 	url = https://github.com/bflycomputer/pond-interface
 	arch = any
 	license = BSD-3-Clause
 	license = OFL-1.1
 	depends = grub
 	depends = os-prober
-	source = pond-interface-32900a97ccd4ff2ad93ccc2227a8dc08c55ab749.tar.gz::https://github.com/bflycomputer/pond-interface/archive/32900a97ccd4ff2ad93ccc2227a8dc08c55ab749.tar.gz
+	source = pond-interface-7458b25461b7aa38a3b9e410a0f71afe1571f8fb.tar.gz::https://github.com/bflycomputer/pond-interface/archive/7458b25461b7aa38a3b9e410a0f71afe1571f8fb.tar.gz
 	source = pond-grub.hook
 	source = pond-grub-update
-	sha256sums = ad61592517429743da7d06a637614c779450db5b2980ffce743a47995e60f10d
+	sha256sums = bd65619e40b631548b717fb931ba8d68ced5eafae6211ef278612ad1079d2e07
 	sha256sums = 4bc2609cd458a46d99f2c17f41dbcc9261d5d948de1363d0196e64a3fc20a377
 	sha256sums = 96a677eeac179484c1c0c6611d4c2ef1dd728078893bc84c792b8653f69883fe
 
