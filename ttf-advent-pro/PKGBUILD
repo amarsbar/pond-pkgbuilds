@@ -1,0 +1,31 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=ttf-advent-pro
+pkgver=3.0.0
+pkgrel=1
+pkgdesc='Advent Pro variable sans-serif font family'
+arch=('any')
+url='https://fonts.google.com/specimen/Advent+Pro'
+license=('OFL-1.1')
+
+_commit=fffdadf0f0c9cc1ec8b407063424a8bfbee05611
+_source="https://raw.githubusercontent.com/google/fonts/$_commit/ofl/adventpro"
+source=(
+  "$pkgname-$pkgver.ttf::$_source/AdventPro%5Bwdth%2Cwght%5D.ttf"
+  "$pkgname-$pkgver-Italic.ttf::$_source/AdventPro-Italic%5Bwdth%2Cwght%5D.ttf"
+  "$pkgname-$pkgver-OFL.txt::$_source/OFL.txt"
+)
+sha256sums=(
+  'b60ab2920b89bdc4b7dadfb282cadac6e03833e7a80844f9eac096359b2b9766'
+  '0917a5d65589025f2a752b1b0568f924dac49a065a25b4d60116b3c6d4d9ebae'
+  'c8d52b6a6c2a6c46193a48d4e6dc7368896bc7d4c069f33abca0728476957aec'
+)
+
+package() {
+  install -Dm644 "$srcdir/$pkgname-$pkgver.ttf" \
+    "$pkgdir/usr/share/fonts/TTF/AdventPro.ttf"
+  install -Dm644 "$srcdir/$pkgname-$pkgver-Italic.ttf" \
+    "$pkgdir/usr/share/fonts/TTF/AdventPro-Italic.ttf"
+  install -Dm644 "$srcdir/$pkgname-$pkgver-OFL.txt" \
+    "$pkgdir/usr/share/licenses/$pkgname/OFL.txt"
+}
