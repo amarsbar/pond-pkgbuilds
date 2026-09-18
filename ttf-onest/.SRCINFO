@@ -1,0 +1,11 @@
+pkgbase = ttf-onest
+	pkgdesc = Onest variable sans-serif font family
+	pkgver = 2.001
+	pkgrel = 1
+	url = https://github.com/simpals/onest
+	arch = any
+	license = OFL-1.1
+	source = https://github.com/simpals/onest/releases/download/2.001/onest-2.001.zip
+	sha256sums = 17b59e19c349e603b7d113a596b6d8e08427e97a7b5235668b69e9d8a06a4267
+
+pkgname = ttf-onest

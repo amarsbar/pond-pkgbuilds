@@ -1,0 +1,18 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=ttf-onest
+pkgver=2.001
+pkgrel=1
+pkgdesc='Onest variable sans-serif font family'
+arch=('any')
+url='https://github.com/simpals/onest'
+license=('OFL-1.1')
+source=("$url/releases/download/$pkgver/onest-$pkgver.zip")
+sha256sums=('17b59e19c349e603b7d113a596b6d8e08427e97a7b5235668b69e9d8a06a4267')
+
+package() {
+  cd "onest-$pkgver"
+  install -Dm644 'fonts/variable/Onest[wght].ttf' \
+    "$pkgdir/usr/share/fonts/$pkgname/Onest[wght].ttf"
+  install -Dm644 OFL.txt "$pkgdir/usr/share/licenses/$pkgname/OFL.txt"
+}
