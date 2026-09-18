@@ -9,10 +9,10 @@ pkgbase = pond-grub-config
 	depends = grub
 	depends = os-prober
 	backup = etc/default/grub
-	source = https://github.com/bflycomputer/pond-interface/releases/download/grub-v0.1/pond-grub-0.1.tar.xz
+	source = pond-interface-5341d6a78614b30b02319522c1c862345afadf0a.tar.gz::https://github.com/bflycomputer/pond-interface/archive/5341d6a78614b30b02319522c1c862345afadf0a.tar.gz
 	source = pond-grub.hook
 	source = pond-grub-update
-	sha256sums = e29626c5446911e2440e998d4aad8c46bf0f37600afbe3d210ed3a6d7b696578
+	sha256sums = fe3fc9242b12d94ca30181adb53c223aefe5e31dbe51460c456d700578aae5af
 	sha256sums = 4bc2609cd458a46d99f2c17f41dbcc9261d5d948de1363d0196e64a3fc20a377
 	sha256sums = 96a677eeac179484c1c0c6611d4c2ef1dd728078893bc84c792b8653f69883fe
 
