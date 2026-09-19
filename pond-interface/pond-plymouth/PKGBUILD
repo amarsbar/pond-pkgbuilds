@@ -1,0 +1,26 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-plymouth
+pkgver=0.0
+pkgrel=1
+pkgdesc='Pond Plymouth boot animation'
+arch=('any')
+url='https://github.com/bflycomputer/pond-interface'
+license=('BSD-3-Clause')
+depends=('plymouth' 'mkinitcpio')
+source=("$pkgname-$pkgver.tar.xz"
+        'pond-plymouth.hook'
+        'pond-plymouth-update')
+sha256sums=('c45b81eb422fe9ca724b4f85b60ce0b3325f783ebbbe7e7094f8d0518a682229'
+            '5482148fd2b732827627fb6c6ef45791a5c2c858b53c48a360879a1611ed33d9'
+            '280157c0475b3e6f16d394b89c0c5f5738588f113aef2f3ad938053ec7ef65c9')
+
+package() {
+  local theme_dir="$pkgdir/usr/share/plymouth/themes/pond"
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm644 plymouth/pond.plymouth plymouth/pond.script -t "$theme_dir"
+  install -Dm644 plymouth/assets/*.png -t "$theme_dir/assets"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/pond-plymouth.hook" "$pkgdir/usr/share/libalpm/hooks/95-pond-plymouth.hook"
+  install -Dm755 "$srcdir/pond-plymouth-update" "$pkgdir/usr/share/libalpm/scripts/pond-plymouth-update"
+}

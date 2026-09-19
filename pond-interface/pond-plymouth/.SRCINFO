@@ -1,0 +1,17 @@
+pkgbase = pond-plymouth
+	pkgdesc = Pond Plymouth boot animation
+	pkgver = 0.0
+	pkgrel = 1
+	url = https://github.com/bflycomputer/pond-interface
+	arch = any
+	license = BSD-3-Clause
+	depends = plymouth
+	depends = mkinitcpio
+	source = pond-plymouth-0.0.tar.xz
+	source = pond-plymouth.hook
+	source = pond-plymouth-update
+	sha256sums = c45b81eb422fe9ca724b4f85b60ce0b3325f783ebbbe7e7094f8d0518a682229
+	sha256sums = 5482148fd2b732827627fb6c6ef45791a5c2c858b53c48a360879a1611ed33d9
+	sha256sums = 280157c0475b3e6f16d394b89c0c5f5738588f113aef2f3ad938053ec7ef65c9
+
+pkgname = pond-plymouth

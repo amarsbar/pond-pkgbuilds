@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+[ "$(plymouth-set-default-theme)" = pond ] || exit 0
+exec mkinitcpio -P

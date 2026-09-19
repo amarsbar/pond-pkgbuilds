@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = pond-plymouth
+
+[Action]
+Description = Updating Pond Plymouth images...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/pond-plymouth-update
