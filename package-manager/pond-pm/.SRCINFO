@@ -15,6 +15,7 @@ pkgbase = pond-pm
 	depends = gcc-libs
 	depends = paru
 	depends = polkit
+	options = !lto
 	source = package-manager::git+https://github.com/amarsbar/package-manager.git#branch=main
 	sha256sums = SKIP
 

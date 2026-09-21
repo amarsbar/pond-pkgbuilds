@@ -9,6 +9,8 @@ url='https://github.com/amarsbar/package-manager'
 license=('BSD-3-Clause')
 depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit')
 makedepends=('cargo' 'git' 'pkgconf')
+# Rust's lld cannot link GCC LTO objects from the bundled C libraries.
+options=('!lto')
 source=("package-manager::git+$url.git#branch=main")
 sha256sums=('SKIP')
 
