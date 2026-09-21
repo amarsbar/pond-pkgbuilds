@@ -1,0 +1,42 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-pm-extension
+pkgver=0.0
+pkgrel=1
+pkgdesc='Launcher extension for installing packages on Pond'
+arch=('x86_64' 'aarch64')
+url='https://github.com/amarsbar/package-manager'
+license=('BSD-3-Clause')
+depends=('pond-launcher' 'flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit')
+makedepends=('cargo' 'git' 'pkgconf' 'nodejs' 'npm')
+source=("package-manager::git+$url.git#branch=main")
+sha256sums=('SKIP')
+
+prepare() {
+  cd package-manager
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+  cd launcher-extension
+  npm ci --cache "$srcdir/npm-cache" --no-audit --no-fund
+}
+
+build() {
+  cd package-manager/launcher-extension
+  export CARGO_TARGET_DIR="$srcdir/target"
+  export CARGO_NET_OFFLINE=true
+  npm run build
+}
+
+check() {
+  cd package-manager
+  export CARGO_TARGET_DIR="$srcdir/target"
+  cargo test --release --frozen -p pm-extension-bridge
+}
+
+package() {
+  cd package-manager
+  install -d "$pkgdir/usr/lib/$pkgname" "$pkgdir/usr/share/vicinae/extensions"
+  cp -r launcher-extension/dist/. "$pkgdir/usr/lib/$pkgname/"
+  ln -s "/usr/lib/$pkgname" "$pkgdir/usr/share/vicinae/extensions/$pkgname"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 libppm/LICENSES/* -t "$pkgdir/usr/share/licenses/$pkgname"
+}
