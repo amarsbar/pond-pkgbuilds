@@ -1,0 +1,43 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-launcher
+pkgver=0.0.0
+pkgrel=1
+pkgdesc='Default launcher for Pond derived from Vicinae'
+arch=('x86_64' 'aarch64')
+url='https://github.com/bflycomputer/vicinae'
+license=('GPL-3.0-only')
+depends=('qt6-base' 'qt6-declarative' 'qt6-svg' 'qt6-wayland' 'layer-shell-qt'
+         'qtkeychain-qt6' 'syntax-highlighting' 'libqalculate' 'cmark-gfm'
+         'openssl' 'nodejs' 'ttf-onest' 'hicolor-icon-theme' 'gcc-libs' 'glibc'
+         'libcap' 'kmod')
+makedepends=('git' 'cmake' 'ninja' 'npm' 'qt6-tools' 'qt6-shadertools'
+             'wayland-protocols')
+checkdepends=('catch2' 'glibc-locales')
+provides=("vicinae=$pkgver")
+conflicts=('vicinae' 'vicinae-bin' 'vicinae-git')
+install=pond-launcher.install
+source=("vicinae::git+$url.git#branch=main")
+sha256sums=('SKIP')
+
+build() {
+  cmake -S vicinae -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTS=ON -DVICINAE_DEV_MODE=OFF \
+    -DUSE_SYSTEM_CMARK_GFM=ON -DVICINAE_NODE_RUNTIME_DOWNLOAD=OFF \
+    -DVICINAE_PROVENANCE=pond \
+    -DAUTO_INSTALL_BROWSER_MANIFESTS=OFF -DENABLE_ONBOARDING=OFF
+  cmake --build build
+}
+
+check() {
+  local test
+  for test in build/bin/*-tests; do
+    "$test" --allow-running-no-tests || return
+  done
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  rm -r "$pkgdir/usr/include/numen" "$pkgdir/usr/lib/cmake/numen" "$pkgdir/usr/lib/libnumen.a"
+}

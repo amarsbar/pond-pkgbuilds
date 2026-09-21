@@ -1,0 +1,43 @@
+pkgbase = pond-launcher
+	pkgdesc = Default launcher for Pond derived from Vicinae
+	pkgver = 0.0.0
+	pkgrel = 1
+	url = https://github.com/bflycomputer/vicinae
+	install = pond-launcher.install
+	arch = x86_64
+	arch = aarch64
+	license = GPL-3.0-only
+	checkdepends = catch2
+	checkdepends = glibc-locales
+	makedepends = git
+	makedepends = cmake
+	makedepends = ninja
+	makedepends = npm
+	makedepends = qt6-tools
+	makedepends = qt6-shadertools
+	makedepends = wayland-protocols
+	depends = qt6-base
+	depends = qt6-declarative
+	depends = qt6-svg
+	depends = qt6-wayland
+	depends = layer-shell-qt
+	depends = qtkeychain-qt6
+	depends = syntax-highlighting
+	depends = libqalculate
+	depends = cmark-gfm
+	depends = openssl
+	depends = nodejs
+	depends = ttf-onest
+	depends = hicolor-icon-theme
+	depends = gcc-libs
+	depends = glibc
+	depends = libcap
+	depends = kmod
+	provides = vicinae=0.0.0
+	conflicts = vicinae
+	conflicts = vicinae-bin
+	conflicts = vicinae-git
+	source = vicinae::git+https://github.com/bflycomputer/vicinae.git#branch=main
+	sha256sums = SKIP
+
+pkgname = pond-launcher
