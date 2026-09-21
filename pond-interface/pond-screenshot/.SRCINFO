@@ -1,0 +1,22 @@
+pkgbase = pond-screenshot
+	pkgdesc = Default screenshotting tool for Pond
+	pkgver = 0.0
+	pkgrel = 1
+	url = https://github.com/bflycomputer/pond-interface
+	arch = x86_64
+	license = BSD-3-Clause
+	makedepends = cmake
+	makedepends = git
+	makedepends = ninja
+	depends = niri>=26.04
+	depends = python
+	depends = qt6-declarative>=6.11
+	depends = qt6-svg
+	depends = qt6-wayland
+	depends = quickshell>=0.3.1
+	depends = ttf-onest
+	depends = wl-clipboard
+	source = pond-interface::git+https://github.com/bflycomputer/pond-interface.git#branch=main
+	sha256sums = SKIP
+
+pkgname = pond-screenshot

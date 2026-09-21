@@ -1,0 +1,38 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-screenshot
+pkgver=0.0
+pkgrel=1
+pkgdesc='Default screenshotting tool for Pond'
+arch=('x86_64')
+url='https://github.com/bflycomputer/pond-interface'
+license=('BSD-3-Clause')
+depends=(
+  'niri>=26.04'
+  'python'
+  'qt6-declarative>=6.11'
+  'qt6-svg'
+  'qt6-wayland'
+  'quickshell>=0.3.1'
+  'ttf-onest'
+  'wl-clipboard'
+)
+makedepends=('cmake' 'git' 'ninja')
+source=("pond-interface::git+$url.git#branch=main")
+sha256sums=('SKIP')
+
+build() {
+  cmake -S "$srcdir/pond-interface/screenshot/native" -B "$srcdir/build" -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build "$srcdir/build"
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install "$srcdir/build"
+  cd pond-interface
+  install -Dm644 screenshot/{qmldir,State.qml,Preview.qml,clipboard.py} \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/Screenshot"
+  install -Dm644 screenshot/assets/*.svg \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/Screenshot/assets"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
