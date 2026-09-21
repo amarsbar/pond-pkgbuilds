@@ -2,7 +2,7 @@
 
 pkgname=pond-lockscreen
 pkgver=0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Pond session lock and SDDM greeter'
 arch=('x86_64')
 url='https://github.com/bflycomputer/pond-interface'
@@ -26,15 +26,15 @@ depends=(
 )
 makedepends=('cmake' 'ninja' 'qt6-shadertools')
 
-_commit=99b56c396362bea979e53d88df52450216b28f9f
+_commit=a06beedcc396ec96f2c53a1414274a4fc75b81fa
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('6a32d672a1c5e8c1ca73251ad90664e102ad7566069ea918f42a7347f5c562d7')
+sha256sums=('61162a5d2c0c5d7540f93afbe68cde5c9c4cace57d76b59fd736d86cb8a84240')
 
 build() {
   cmake -S "pond-interface-$_commit" -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-  cmake --build build --target pond_systemplugin
+  cmake --build build --target pond_wifi_statusplugin
   /usr/lib/qt6/bin/qsb --qt6 -o build/soft-light.frag.qsb \
     "pond-interface-$_commit/lockscreen/frontend/shaders/soft-light.frag"
 }
@@ -49,10 +49,10 @@ package() {
     "$destination/lockscreen/frontend/shaders/soft-light.frag.qsb"
   install -Dm644 lockscreen/greeter/{metadata.desktop,niri.kdl} -t "$destination/lockscreen/greeter"
   install -Dm644 lockscreen/greeter/sddm.conf "$pkgdir/usr/lib/sddm/sddm.conf.d/pond-lockscreen.conf"
-  install -Dm755 "$srcdir/build/libpond_system.so" "$srcdir/build/Pond/System/libpond_systemplugin.so" \
-    -t "$pkgdir/usr/lib/qt6/qml/Pond/System"
-  install -Dm644 "$srcdir/build/Pond/System/"{qmldir,pond_system.qmltypes} \
-    -t "$pkgdir/usr/lib/qt6/qml/Pond/System"
+  install -Dm755 "$srcdir/build/libpond_wifi_status.so" "$srcdir/build/Pond/WifiStatus/libpond_wifi_statusplugin.so" \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/WifiStatus"
+  install -Dm644 "$srcdir/build/Pond/WifiStatus/"{qmldir,pond_wifi_status.qmltypes} \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/WifiStatus"
   install -d "$pkgdir/etc/xdg/quickshell"
   ln -s /usr/share/pond-interface/lockscreen "$pkgdir/etc/xdg/quickshell/pond-lockscreen"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

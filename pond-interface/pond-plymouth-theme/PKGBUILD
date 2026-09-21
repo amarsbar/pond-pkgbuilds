@@ -2,17 +2,17 @@
 
 pkgname=pond-plymouth-theme
 pkgver=0.0
-pkgrel=1
-pkgdesc='Pond Plymouth boot animation'
+pkgrel=2
+pkgdesc='Pond Plymouth boot, shutdown, and restart animations'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
 license=('BSD-3-Clause')
 depends=('plymouth' 'mkinitcpio')
-_commit=2d799392a4667a9e1c7bafccf3461d5870d41e8d
+_commit=a06beedcc396ec96f2c53a1414274a4fc75b81fa
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz"
         'pond-plymouth.hook'
         'pond-plymouth-update')
-sha256sums=('fffeb5eb0b09e6187bc40ee6fb0b6b00fdf6acf58707b7b042288cfd8504fca1'
+sha256sums=('61162a5d2c0c5d7540f93afbe68cde5c9c4cace57d76b59fd736d86cb8a84240'
             'c5dbb4d0e42a70e9d2781ac9eeb4aeac68ad6aafd9de124b3561dab6a153b647'
             '280157c0475b3e6f16d394b89c0c5f5738588f113aef2f3ad938053ec7ef65c9')
 
