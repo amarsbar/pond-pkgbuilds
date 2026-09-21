@@ -1,0 +1,37 @@
+# Maintainer: Ammar Hossain <ammar@butterfly.so>
+
+pkgname=pond-pm
+pkgver=0.0
+pkgrel=1
+pkgdesc='TUI for managing packages on Pond'
+arch=('x86_64' 'aarch64')
+url='https://github.com/amarsbar/package-manager'
+license=('BSD-3-Clause')
+depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit')
+makedepends=('cargo' 'git' 'pkgconf')
+source=("package-manager::git+$url.git#branch=main")
+sha256sums=('SKIP')
+
+prepare() {
+  cd package-manager
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd package-manager
+  export CARGO_TARGET_DIR="$srcdir/target"
+  cargo build --release --frozen -p pm
+}
+
+check() {
+  cd package-manager
+  export CARGO_TARGET_DIR="$srcdir/target"
+  cargo test --release --frozen -p pm -p libppm
+}
+
+package() {
+  cd package-manager
+  install -Dm755 "$srcdir/target/release/pm" "$pkgdir/usr/bin/pm"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 libppm/LICENSES/* -t "$pkgdir/usr/share/licenses/$pkgname"
+}
