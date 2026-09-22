@@ -2,7 +2,7 @@
 
 pkgname=pond-lockscreen
 pkgver=0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Pond session lock and SDDM greeter'
 arch=('x86_64')
 url='https://github.com/bflycomputer/pond-interface'
@@ -26,9 +26,9 @@ depends=(
 )
 makedepends=('cmake' 'ninja' 'qt6-shadertools')
 
-_commit=a06beedcc396ec96f2c53a1414274a4fc75b81fa
+_commit=af687ce3b45172211bb11df93f10245f4a0b6557
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('61162a5d2c0c5d7540f93afbe68cde5c9c4cace57d76b59fd736d86cb8a84240')
+sha256sums=('27d5c90372d7546e54e7d0016ca3ae37630af0f728bfc36bdf9404c6458262b4')
 
 build() {
   cmake -S "pond-interface-$_commit" -B build -G Ninja \
