@@ -1,12 +1,13 @@
 pkgbase = pond-shell
 	pkgdesc = Pond desktop shell for niri
 	pkgver = 0.0
-	pkgrel = 2
+	pkgrel = 3
 	url = https://github.com/bflycomputer/pond-interface
 	arch = any
 	license = BSD-3-Clause
 	depends = bluez
 	depends = brightnessctl
+	depends = capitaine-cursors
 	depends = ddcutil
 	depends = fastfetch
 	depends = gdk-pixbuf2

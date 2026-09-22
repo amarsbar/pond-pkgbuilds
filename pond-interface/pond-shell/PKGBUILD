@@ -2,7 +2,7 @@
 
 pkgname=pond-shell
 pkgver=0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
@@ -10,6 +10,7 @@ license=('BSD-3-Clause')
 depends=(
   'bluez'
   'brightnessctl'
+  'capitaine-cursors'
   'ddcutil'
   'fastfetch'
   'gdk-pixbuf2'
