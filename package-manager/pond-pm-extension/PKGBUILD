@@ -2,7 +2,7 @@
 
 pkgname=pond-pm-extension
 pkgver=0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Launcher extension for installing packages on Pond'
 arch=('x86_64' 'aarch64')
 url='https://github.com/amarsbar/package-manager'
