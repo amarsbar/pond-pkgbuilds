@@ -3,6 +3,7 @@ Operation = Install
 Operation = Upgrade
 Type = Package
 Target = pond-plymouth-theme
+Target = plymouth
 
 [Action]
 Description = Updating Pond Plymouth images...

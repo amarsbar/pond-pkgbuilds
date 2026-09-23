@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
 
-[ "$(plymouth-set-default-theme)" = pond ] || exit 0
+install -m644 /usr/share/plymouth/themes/pond/assets/watermark.png \
+  /usr/share/plymouth/themes/spinner/watermark.png
 exec mkinitcpio -P
