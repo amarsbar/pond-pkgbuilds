@@ -2,12 +2,13 @@
 
 pkgname=pond-plymouth-theme
 pkgver=0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Pond Plymouth boot, shutdown, and restart animations'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
 license=('BSD-3-Clause')
 depends=('plymouth' 'mkinitcpio')
+install='pond-plymouth.install'
 _commit=a06beedcc396ec96f2c53a1414274a4fc75b81fa
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz"
         'pond-plymouth.hook'

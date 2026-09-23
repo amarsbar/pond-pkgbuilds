@@ -1,8 +1,9 @@
 pkgbase = pond-plymouth-theme
 	pkgdesc = Pond Plymouth boot, shutdown, and restart animations
 	pkgver = 0.0
-	pkgrel = 2
+	pkgrel = 3
 	url = https://github.com/bflycomputer/pond-interface
+	install = pond-plymouth.install
 	arch = any
 	license = BSD-3-Clause
 	depends = plymouth
