@@ -2,12 +2,12 @@
 
 pkgname=pond-pm
 pkgver=0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='TUI for managing packages on Pond'
 arch=('x86_64' 'aarch64')
 url='https://github.com/amarsbar/package-manager'
 license=('BSD-3-Clause')
-depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit')
+depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit' 'util-linux')
 makedepends=('cargo' 'git' 'pkgconf')
 # Rust's lld cannot link GCC LTO objects from the bundled C libraries.
 options=('!lto')
@@ -34,6 +34,7 @@ check() {
 package() {
   cd package-manager
   install -Dm755 "$srcdir/target/release/pm" "$pkgdir/usr/bin/pm"
+  install -Dm644 data/so.butterfly.pond.install.policy -t "$pkgdir/usr/share/polkit-1/actions"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
   install -Dm644 libppm/LICENSES/* -t "$pkgdir/usr/share/licenses/$pkgname"
 }
