@@ -1,7 +1,7 @@
 pkgbase = pond-launcher
 	pkgdesc = Default launcher for Pond derived from Vicinae
 	pkgver = 0.0.0
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/bflycomputer/vicinae
 	install = pond-launcher.install
 	arch = x86_64

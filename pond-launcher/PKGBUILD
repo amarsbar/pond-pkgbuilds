@@ -2,7 +2,7 @@
 
 pkgname=pond-launcher
 pkgver=0.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Default launcher for Pond derived from Vicinae'
 arch=('x86_64' 'aarch64')
 url='https://github.com/bflycomputer/vicinae'
