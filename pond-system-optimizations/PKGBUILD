@@ -4,7 +4,7 @@
 _gitname=CachyOS-Settings
 pkgname=pond-system-optimizations
 pkgver=1.4.0
-pkgrel=1
+pkgrel=2
 epoch=1
 arch=('any')
 license=(GPL-3.0-only ISC)
@@ -13,7 +13,7 @@ pkgdesc='System optimizations for Pond'
 url="https://github.com/CachyOS/$_gitname"
 source=("git+$url.git?signed#tag=$pkgver")
 install="$pkgname.install"
-sha256sums=('1c0323ef9a7cad57408bef6e0addb95ca05998057c28a8e97dfcf66c0856f2eb')
+sha256sums=('SKIP')
 validpgpkeys=(
   E8B9AA39F054E30E8290D492C3C4820857F654FE  # Peter Jung <admin@ptr1337.dev>
   B1B70BB1CD56047DEF31DE2EB62C3D10C54D5DA9  # Vladislav Nepogodin <nepogodin.vlad@gmail.com>
