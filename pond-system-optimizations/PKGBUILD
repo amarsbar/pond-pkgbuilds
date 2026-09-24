@@ -1,20 +1,10 @@
-<<<<<<< HEAD
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 # Contributor: Peter Jung <admin@ptr1337.dev>
 
 _gitname=CachyOS-Settings
 pkgname=pond-system-optimizations
-pkgver=1.4.0
-pkgrel=2
-=======
-# Maintainer: Peter Jung <admin@ptr1337.dev>
-# Maintainer: Vasiliy Stelmachenok <ventureo@cachyos.org>
-
-_gitname=CachyOS-Settings
-pkgname=cachyos-settings
 pkgver=1.4.1
 pkgrel=1
->>>>>>> 2dcc72376fc6fc957b0425a35ccf05b593df3c06
 epoch=1
 arch=('any')
 license=(GPL-3.0-only ISC)
@@ -23,11 +13,7 @@ pkgdesc='System optimizations for Pond'
 url="https://github.com/CachyOS/$_gitname"
 source=("git+$url.git?signed#tag=$pkgver")
 install="$pkgname.install"
-<<<<<<< HEAD
-sha256sums=('SKIP')
-=======
 sha256sums=('977bb6eb2ed5b56517cdb7cd1a911c3576a7d67d6d48313f9b0997f217ee2427')
->>>>>>> 2dcc72376fc6fc957b0425a35ccf05b593df3c06
 validpgpkeys=(
   E8B9AA39F054E30E8290D492C3C4820857F654FE  # Peter Jung <admin@ptr1337.dev>
   B1B70BB1CD56047DEF31DE2EB62C3D10C54D5DA9  # Vladislav Nepogodin <nepogodin.vlad@gmail.com>
