@@ -1,7 +1,7 @@
 pkgbase = pond-plymouth-theme
 	pkgdesc = Pond Plymouth boot, shutdown, and restart animations
 	pkgver = 0.0
-	pkgrel = 4
+	pkgrel = 5
 	url = https://github.com/bflycomputer/pond-interface
 	install = pond-plymouth.install
 	arch = any
@@ -13,6 +13,6 @@ pkgbase = pond-plymouth-theme
 	source = pond-plymouth-update
 	sha256sums = 63d01de580b1a8506a394f225d1b25162ffa0d21bedb62669301c50c86793bb9
 	sha256sums = eaf474787de29f9850d0558ae2f1a9c0cb38ae8e1e4906aa31b2eafc93a45b23
-	sha256sums = 3b44f34e54b625f33973dab531f310bab09bb3c05a09305203c322da9ff0d714
+	sha256sums = bfd856f2ef8eb6a2c552612aad09a77a8e9426dbbb48257776c1e1a90d3fcbb5
 
 pkgname = pond-plymouth-theme

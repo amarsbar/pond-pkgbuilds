@@ -1,6 +1,16 @@
 #!/bin/sh
 set -eu
 
+# Render at native resolution; the theme handles scaling to each display.
+config=/etc/plymouth/plymouthd.conf
+if ! grep -q '^\[Daemon\]$' "$config" 2>/dev/null; then
+  printf '\n[Daemon]\n' >> "$config"
+fi
+sed -i '/^\[Daemon\]$/,/^\[/{
+  /^[[:blank:]]*DeviceScale[[:blank:]]*=/d
+}' "$config"
+sed -i '/^\[Daemon\]$/a DeviceScale=1' "$config"
+
 install -m644 /usr/share/plymouth/themes/pond/assets/watermark.png \
   /usr/share/plymouth/themes/spinner/watermark.png
 exec mkinitcpio -P

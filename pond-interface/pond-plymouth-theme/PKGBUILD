@@ -2,7 +2,7 @@
 
 pkgname=pond-plymouth-theme
 pkgver=0.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Pond Plymouth boot, shutdown, and restart animations'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
@@ -15,7 +15,7 @@ source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz"
         'pond-plymouth-update')
 sha256sums=('63d01de580b1a8506a394f225d1b25162ffa0d21bedb62669301c50c86793bb9'
             'eaf474787de29f9850d0558ae2f1a9c0cb38ae8e1e4906aa31b2eafc93a45b23'
-            '3b44f34e54b625f33973dab531f310bab09bb3c05a09305203c322da9ff0d714')
+            'bfd856f2ef8eb6a2c552612aad09a77a8e9426dbbb48257776c1e1a90d3fcbb5')
 
 package() {
   local theme_dir="$pkgdir/usr/share/plymouth/themes/pond"
