@@ -2,7 +2,7 @@
 
 pkgname=pond-pm
 pkgver=0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='TUI for managing packages on Pond'
 arch=('x86_64' 'aarch64')
 url='https://github.com/amarsbar/package-manager'
