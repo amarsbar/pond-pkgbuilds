@@ -1,7 +1,7 @@
 pkgbase = pond-shell
 	pkgdesc = Pond desktop shell for niri
 	pkgver = 0.0
-	pkgrel = 4
+	pkgrel = 5
 	url = https://github.com/bflycomputer/pond-interface
 	arch = any
 	license = BSD-3-Clause
@@ -20,17 +20,19 @@ pkgbase = pond-shell
 	depends = pond-wallpaper
 	depends = python
 	depends = python-gobject
-	depends = qt6-declarative>=6.11
+	depends = qt6-declarative
 	depends = qt6-svg
 	depends = qt6-wayland
-	depends = quickshell>=0.3.1
+	depends = quickshell
 	depends = systemd
 	depends = ttf-advent-pro
 	depends = ttf-ibm-plex
 	depends = ttf-onest
 	depends = upower
 	depends = zenity
-	source = pond-interface-fed978094eca3a713150b2063383b41af7daf0e4.tar.gz::https://github.com/bflycomputer/pond-interface/archive/fed978094eca3a713150b2063383b41af7daf0e4.tar.gz
-	sha256sums = a42770fea8165baea311dbfb056fa90a1a453055b544019983c5edfb67da019f
+	backup = etc/xdg/kitty/kitty.conf
+	backup = etc/xdg/fastfetch/config.jsonc
+	source = pond-interface-c782df654dcfa69463f61afddff478042ed4f310.tar.gz::https://github.com/bflycomputer/pond-interface/archive/c782df654dcfa69463f61afddff478042ed4f310.tar.gz
+	sha256sums = e6c8d8a4c41264a73aa6319cdd61027d7918d7a5baeb485fd0af92793848e0e4
 
 pkgname = pond-shell

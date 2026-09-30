@@ -2,7 +2,7 @@
 
 pkgname=pond-shell
 pkgver=0.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
@@ -23,10 +23,10 @@ depends=(
   'pond-wallpaper'
   'python'
   'python-gobject'
-  'qt6-declarative>=6.11'
+  'qt6-declarative'
   'qt6-svg'
   'qt6-wayland'
-  'quickshell>=0.3.1'
+  'quickshell'
   'systemd'
   'ttf-advent-pro'
   'ttf-ibm-plex'
@@ -34,10 +34,14 @@ depends=(
   'upower'
   'zenity'
 )
+backup=(
+  'etc/xdg/kitty/kitty.conf'
+  'etc/xdg/fastfetch/config.jsonc'
+)
 
-_commit=fed978094eca3a713150b2063383b41af7daf0e4
+_commit=c782df654dcfa69463f61afddff478042ed4f310
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('a42770fea8165baea311dbfb056fa90a1a453055b544019983c5edfb67da019f')
+sha256sums=('e6c8d8a4c41264a73aa6319cdd61027d7918d7a5baeb485fd0af92793848e0e4')
 
 package() {
   cd "pond-interface-$_commit"
@@ -45,6 +49,22 @@ package() {
     -o -name '*.svg' -o -name '*.png' -o -name '*.py' \) \
     -exec install -Dm644 '{}' "$pkgdir/usr/share/pond-interface/{}" \;
   install -d "$pkgdir/etc/xdg/quickshell"
-  ln -s /usr/share/pond-interface/shell "$pkgdir/etc/xdg/quickshell/pond-default"
+  ln -s /usr/share/pond-interface/shell "$pkgdir/etc/xdg/quickshell/pond-shell"
+
+  local defaults=/usr/share/pond-interface/config
+  install -Dm644 config/niri/shell/*.kdl -t "$pkgdir$defaults/niri/shell"
+
+  install -Dm644 config/kitty/etc/kitty.conf "$pkgdir/etc/xdg/kitty/kitty.conf"
+
+  install -Dm644 config/fastfetch/config.jsonc "$pkgdir/etc/xdg/fastfetch/config.jsonc"
+  install -Dm644 config/fastfetch/butterfly.png "$pkgdir$defaults/fastfetch/butterfly.png"
+  install -Dm644 config/fastfetch/fastfetch-flowers.ttf "$pkgdir/usr/share/fonts/TTF/fastfetch-flowers.ttf"
+
+  install -Dm644 config/niri/config.kdl "$pkgdir/etc/skel/.config/niri/config.kdl"
+  install -Dm644 config/niri/cfg/*.kdl -t "$pkgdir/etc/skel/.config/niri/cfg"
+  ln -s "$defaults/niri/shell" "$pkgdir/etc/skel/.config/niri/shell"
+  install -Dm644 config/kitty/kitty.conf "$pkgdir/etc/skel/.config/kitty/kitty.conf"
+  install -Dm644 config/kitty/themes/default.conf "$pkgdir$defaults/kitty/themes/default.conf"
+  ln -s "$defaults/kitty/themes/default.conf" "$pkgdir/etc/skel/.config/kitty/current-theme.conf"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
