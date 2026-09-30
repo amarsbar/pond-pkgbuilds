@@ -2,7 +2,7 @@
 
 pkgname=pond-shell
 pkgver=0.0
-pkgrel=5
+pkgrel=6
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
@@ -14,6 +14,7 @@ depends=(
   'ddcutil'
   'fastfetch'
   'gdk-pixbuf2'
+  'imagemagick'
   'iw'
   'networkmanager'
   'niri'
@@ -39,9 +40,9 @@ backup=(
   'etc/xdg/fastfetch/config.jsonc'
 )
 
-_commit=c782df654dcfa69463f61afddff478042ed4f310
+_commit=e8418a278efdd23759c08759471456adfc3fa81c
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('e6c8d8a4c41264a73aa6319cdd61027d7918d7a5baeb485fd0af92793848e0e4')
+sha256sums=('fbb2cabfd31c10077fa34b9ea25a6749deb004c51b3accb699aa73ab7d758824')
 
 package() {
   cd "pond-interface-$_commit"
