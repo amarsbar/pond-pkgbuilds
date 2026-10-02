@@ -1,8 +1,8 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-launcher
-pkgver=0.0.0
-pkgrel=3
+pkgver=0.1.0
+pkgrel=1
 pkgdesc='Default launcher for Pond derived from Vicinae'
 arch=('x86_64' 'aarch64')
 url='https://github.com/bflycomputer/vicinae'
@@ -17,7 +17,8 @@ checkdepends=('catch2' 'glibc-locales')
 provides=("vicinae=$pkgver")
 conflicts=('vicinae' 'vicinae-bin' 'vicinae-git')
 install=pond-launcher.install
-source=("vicinae::git+$url.git#branch=main")
+_commit=0560213495c39c25851954bd442f069709419efd
+source=("vicinae::git+$url.git#commit=$_commit")
 sha256sums=('SKIP')
 
 build() {
