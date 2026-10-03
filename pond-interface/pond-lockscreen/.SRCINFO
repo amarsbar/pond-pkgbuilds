@@ -1,6 +1,6 @@
 pkgbase = pond-lockscreen
 	pkgdesc = Pond session lock and SDDM greeter
-	pkgver = 0.1.0
+	pkgver = 0.1.1
 	pkgrel = 1
 	url = https://github.com/bflycomputer/pond-interface
 	arch = x86_64
@@ -23,7 +23,7 @@ pkgbase = pond-lockscreen
 	depends = ttf-onest
 	depends = sddm
 	depends = niri
-	source = pond-interface-0c97b8416b9ae2559125706adce4837c616119d2.tar.gz::https://github.com/bflycomputer/pond-interface/archive/0c97b8416b9ae2559125706adce4837c616119d2.tar.gz
-	sha256sums = 83800a45bca6b0ef2d6a2b180fb60bdae851363260db4dd885c81e5efd5cd299
+	source = pond-interface-ca80993aad9ef9ac4f572669b7ea29cf26fe0e1d.tar.gz::https://github.com/bflycomputer/pond-interface/archive/ca80993aad9ef9ac4f572669b7ea29cf26fe0e1d.tar.gz
+	sha256sums = 294fe181cd2117a2bcdecfd7b7ac3abda601cdc1289dfcec802b834574423d9b
 
 pkgname = pond-lockscreen
