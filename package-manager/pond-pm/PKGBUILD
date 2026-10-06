@@ -1,8 +1,8 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-pm
-pkgver=0.0
-pkgrel=3
+pkgver=0.1.0
+pkgrel=1
 pkgdesc='TUI for managing packages on Pond'
 arch=('x86_64' 'aarch64')
 url='https://github.com/amarsbar/package-manager'
@@ -11,7 +11,8 @@ depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'paru' 'polkit' 'util-linux')
 makedepends=('cargo' 'git' 'pkgconf')
 # Rust's lld cannot link GCC LTO objects from the bundled C libraries.
 options=('!lto')
-source=("package-manager::git+$url.git#branch=main")
+_commit=9f21147e2f3244cd1dbc9a471ba5f3e462e7503c
+source=("package-manager::git+$url.git#commit=$_commit")
 sha256sums=('SKIP')
 
 prepare() {
