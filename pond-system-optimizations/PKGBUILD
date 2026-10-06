@@ -4,7 +4,7 @@
 _gitname=CachyOS-Settings
 pkgname=pond-system-optimizations
 pkgver=1.4.1
-pkgrel=1
+pkgrel=2
 epoch=1
 arch=('any')
 license=(GPL-3.0-only ISC)
