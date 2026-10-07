@@ -1,0 +1,18 @@
+migrate_timezone_sudoers() {
+    local rule=/etc/sudoers.d/10-tzupdate staged
+    [[ -e "$rule" ]] && return 0
+    staged=$(mktemp /etc/sudoers.d/.10-tzupdate.XXXXXX) || return 1
+    printf '%s\n' '%wheel ALL=(root) NOPASSWD: /usr/bin/timedatectl ^set-timezone [A-Za-z0-9_+][A-Za-z0-9_+.-]*(/[A-Za-z0-9_+][A-Za-z0-9_+.-]*)*$' > "$staged"
+    if visudo -cqf "$staged"; then
+        chmod 0440 "$staged" && mv "$staged" "$rule"
+    else
+        rm -f "$staged"
+        return 1
+    fi
+}
+
+post_upgrade() {
+    if (( $(vercmp "$2" 0.1.4) < 0 )); then
+        migrate_timezone_sudoers
+    fi
+}
