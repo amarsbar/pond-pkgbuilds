@@ -34,6 +34,12 @@ migrate_pacman_config() {
         "$config"
 }
 
+# Temporary migration for existing installs; new images use a regular file.
+migrate_os_release() {
+    [[ -L /etc/os-release ]] || return 0
+    cp --remove-destination /usr/lib/os-release /etc/os-release
+}
+
 post_install() {
     echo "Enabling services..."
     for service in "${SERVICES[@]}"; do
@@ -56,4 +62,5 @@ post_upgrade() {
         migrate_keyboard_layout
     fi
     migrate_pacman_config
+    migrate_os_release
 }
