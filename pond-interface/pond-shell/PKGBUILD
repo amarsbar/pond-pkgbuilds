@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-shell
-pkgver=0.1.4
+pkgver=0.1.5
 pkgrel=1
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
@@ -47,9 +47,9 @@ backup=(
   'etc/xdg/gtk-4.0/settings.ini'
 )
 
-_commit=eb0d0c770bae6ffc6b3988d8b3339e14e53b0ac7
+_commit=3df68ac7d283b887c8fd82cd6778a6e9339f340b
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('75ef023675d31fd923fa6957d64f4d7dbc4524104bda418ba951f4dea3d66807')
+sha256sums=('8ec59d796e3098996756a59a985c2c93f9459f903da98965eb62cc9ba420e24a')
 
 package() {
   cd "pond-interface-$_commit"

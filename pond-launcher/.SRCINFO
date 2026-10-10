@@ -1,6 +1,6 @@
 pkgbase = pond-launcher
 	pkgdesc = Default launcher for Pond derived from Vicinae
-	pkgver = 0.1.2
+	pkgver = 0.1.3
 	pkgrel = 1
 	url = https://github.com/bflycomputer/vicinae
 	install = pond-launcher.install
@@ -33,11 +33,11 @@ pkgbase = pond-launcher
 	depends = glibc
 	depends = libcap
 	depends = kmod
-	provides = vicinae=0.1.2
+	provides = vicinae=0.1.3
 	conflicts = vicinae
 	conflicts = vicinae-bin
 	conflicts = vicinae-git
-	source = vicinae::git+https://github.com/bflycomputer/vicinae.git#commit=2204424ca09cf06e00ab146c589328ede3c603ee
+	source = vicinae::git+https://github.com/bflycomputer/vicinae.git#commit=c1d4bfa03b9f8bb4438746eded9c65073a89fc41
 	sha256sums = SKIP
 
 pkgname = pond-launcher

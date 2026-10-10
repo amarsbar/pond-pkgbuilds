@@ -1,6 +1,6 @@
 pkgbase = pond-shell
 	pkgdesc = Pond desktop shell for niri
-	pkgver = 0.1.4
+	pkgver = 0.1.5
 	pkgrel = 1
 	url = https://github.com/bflycomputer/pond-interface
 	install = pond-shell.install
@@ -40,7 +40,7 @@ pkgbase = pond-shell
 	backup = etc/xdg/fastfetch/config.jsonc
 	backup = etc/xdg/gtk-3.0/settings.ini
 	backup = etc/xdg/gtk-4.0/settings.ini
-	source = pond-interface-eb0d0c770bae6ffc6b3988d8b3339e14e53b0ac7.tar.gz::https://github.com/bflycomputer/pond-interface/archive/eb0d0c770bae6ffc6b3988d8b3339e14e53b0ac7.tar.gz
-	sha256sums = 75ef023675d31fd923fa6957d64f4d7dbc4524104bda418ba951f4dea3d66807
+	source = pond-interface-3df68ac7d283b887c8fd82cd6778a6e9339f340b.tar.gz::https://github.com/bflycomputer/pond-interface/archive/3df68ac7d283b887c8fd82cd6778a6e9339f340b.tar.gz
+	sha256sums = 8ec59d796e3098996756a59a985c2c93f9459f903da98965eb62cc9ba420e24a
 
 pkgname = pond-shell
