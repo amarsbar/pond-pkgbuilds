@@ -1,6 +1,6 @@
 pkgbase = pond-pm
 	pkgdesc = TUI for managing packages on Pond
-	pkgver = 0.1.0
+	pkgver = 0.1.1
 	pkgrel = 1
 	url = https://github.com/amarsbar/package-manager
 	arch = x86_64
@@ -13,11 +13,12 @@ pkgbase = pond-pm
 	depends = glib2
 	depends = glibc
 	depends = gcc-libs
+	depends = pacman-contrib
 	depends = paru
 	depends = polkit
 	depends = util-linux
 	options = !lto
-	source = package-manager::git+https://github.com/amarsbar/package-manager.git#commit=9f21147e2f3244cd1dbc9a471ba5f3e462e7503c
+	source = package-manager::git+https://github.com/amarsbar/package-manager.git#commit=6671432fe144734594a236c4ffe10686c7374823
 	sha256sums = SKIP
 
 pkgname = pond-pm
