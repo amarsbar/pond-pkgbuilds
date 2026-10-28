@@ -1,17 +1,17 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-pm
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc='TUI for managing packages on Pond'
 arch=('x86_64' 'aarch64')
-url='https://github.com/amarsbar/package-manager'
+url='https://github.com/bflycomputer/package-manager'
 license=('BSD-3-Clause')
 depends=('flatpak' 'glib2' 'glibc' 'gcc-libs' 'pacman-contrib' 'paru' 'polkit' 'util-linux')
 makedepends=('cargo' 'git' 'pkgconf')
 # Rust's lld cannot link GCC LTO objects from the bundled C libraries.
 options=('!lto')
-_commit=6671432fe144734594a236c4ffe10686c7374823
+_commit=805bebd15b5f617302be823a75e3d64762dbb7f2
 source=("package-manager::git+$url.git#commit=$_commit")
 sha256sums=('SKIP')
 
@@ -29,13 +29,14 @@ build() {
 check() {
   cd package-manager
   export CARGO_TARGET_DIR="$srcdir/target"
-  cargo test --release --frozen -p pm -p libppm
+  cargo test --release --frozen -p pm -p libpm
 }
 
 package() {
   cd package-manager
   install -Dm755 "$srcdir/target/release/pm" "$pkgdir/usr/bin/pm"
-  install -Dm644 data/so.butterfly.pond.install.policy -t "$pkgdir/usr/share/polkit-1/actions"
+  install -Dm644 so.butterfly.pond.install.policy -t "$pkgdir/usr/share/polkit-1/actions"
+  install -Dm644 icons/*.webp -t "$pkgdir/usr/share/pond-pm/icons"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
-  install -Dm644 libppm/LICENSES/* -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 libpm/LICENSES/* -t "$pkgdir/usr/share/licenses/$pkgname"
 }

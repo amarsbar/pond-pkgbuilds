@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-launcher
-pkgver=0.1.4
+pkgver=0.1.5
 pkgrel=1
 pkgdesc='Default launcher for Pond derived from Vicinae'
 arch=('x86_64' 'aarch64')
@@ -10,14 +10,14 @@ license=('GPL-3.0-only')
 depends=('qt6-base' 'qt6-declarative' 'qt6-svg' 'qt6-wayland' 'layer-shell-qt'
          'qtkeychain-qt6' 'syntax-highlighting' 'libqalculate' 'cmark-gfm'
          'openssl' 'nodejs' 'ttf-onest' 'hicolor-icon-theme' 'gcc-libs' 'glibc'
-         'libcap' 'kmod')
+         'libcap' 'kmod' 'qt6-imageformats')
 makedepends=('git' 'cmake' 'ninja' 'npm' 'qt6-tools' 'qt6-shadertools'
              'wayland-protocols')
 checkdepends=('catch2' 'glibc-locales')
 provides=("vicinae=$pkgver")
 conflicts=('vicinae' 'vicinae-bin' 'vicinae-git')
 install=pond-launcher.install
-_commit=2e0eac1e4bb0df926652119aa5947fd2dbd67fe3
+_commit=12d46a413f8db83073fef25e2da35a69bbcfb371
 source=("vicinae::git+$url.git#commit=$_commit")
 sha256sums=('SKIP')
 

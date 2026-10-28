@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-shell
-pkgver=0.1.10
+pkgver=0.1.11
 pkgrel=1
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
@@ -31,6 +31,7 @@ depends=(
   'python-gobject'
   'python-pyqt6'
   'qt6-declarative'
+  'qt6-imageformats'
   'qt6-svg'
   'qt6-wayland'
   'quickshell'
@@ -49,9 +50,9 @@ backup=(
   'etc/xdg/gtk-4.0/settings.ini'
 )
 
-_commit=8b3ef92fb65e5f5480732b956514fecf0e23198e
+_commit=b652dd48abaf965b56295dae9bd093ae8ade0ae6
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('18b7c936c1889c3b30d1a568331ab553a0dfd6f8d5c84bb030f9a5f17ccd3748')
+sha256sums=('9ba9ed9436992f80f4b6b275b3fbadb068643e233763b231d65ecdeff1623b5e')
 
 package() {
   cd "pond-interface-$_commit"
@@ -60,6 +61,7 @@ package() {
     -exec install -Dm644 '{}' "$pkgdir/usr/share/pond-interface/{}" \;
   install -d "$pkgdir/etc/xdg/quickshell"
   ln -s /usr/share/pond-interface/shell "$pkgdir/etc/xdg/quickshell/pond-shell"
+  install -Dm644 config/applications/pond-manual.desktop -t "$pkgdir/usr/share/applications"
 
   install -Dm644 config/gtk-3.0/settings.ini "$pkgdir/etc/xdg/gtk-3.0/settings.ini"
   install -Dm644 config/gtk-4.0/settings.ini "$pkgdir/etc/xdg/gtk-4.0/settings.ini"
