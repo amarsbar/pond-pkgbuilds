@@ -1,18 +1,18 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-wallpaper
-pkgver=0.1.1
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Wallpaper manager for Pond'
 arch=('any')
 url='https://github.com/bflycomputer/pond-interface'
 license=('BSD-3-Clause')
-depends=('qt6-declarative' 'qt6-wayland' 'quickshell')
+depends=('python' 'python-pyqt6' 'qt6-declarative' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'quickshell' 'zenity')
 makedepends=('qt6-shadertools')
 
-_commit=3df68ac7d283b887c8fd82cd6778a6e9339f340b
+_commit=3ce41ea5a99ce60c653c44d28f5a28704427cc79
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('8ec59d796e3098996756a59a985c2c93f9459f903da98965eb62cc9ba420e24a')
+sha256sums=('e1a899c43f0970776d981e6780c7d7773d74661697b2174d51b93f40727521b9')
 
 build() {
   cd "pond-interface-$_commit/wallpaper/daylight"
@@ -23,8 +23,14 @@ package() {
   cd "pond-interface-$_commit"
   install -Dm644 wallpaper/daylight/{Sky.qml,SkyState.js,qmldir,sky.frag.qsb} \
     -t "$pkgdir/usr/lib/qt6/qml/Pond/Daylight"
-  install -Dm644 wallpaper/{qmldir,Window.qml,Content.qml,Reveal.qml} \
+  install -Dm644 wallpaper/desktop/{qmldir,Window.qml,Content.qml,Reveal.qml} \
     -t "$pkgdir/usr/lib/qt6/qml/Pond/Wallpaper"
+  find wallpaper/desktop -maxdepth 1 -type f -name '*.qsb' \
+    -exec install -Dm644 '{}' -t "$pkgdir/usr/lib/qt6/qml/Pond/Wallpaper" \;
+  install -Dm755 wallpaper/control.py "$pkgdir/usr/share/pond-interface/wallpaper/control.py"
+  install -Dm644 wallpaper/catalog.json "$pkgdir/usr/share/pond-interface/wallpaper/catalog.json"
+  install -Dm644 wallpaper/included/*.jpg \
+    -t "$pkgdir/usr/share/pond-interface/wallpaper/included"
   install -dm755 "$pkgdir/etc/skel/Pictures/Wallpapers"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

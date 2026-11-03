@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-shell
-pkgver=0.1.11
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Pond desktop shell for niri'
 arch=('any')
@@ -14,7 +14,6 @@ depends=(
   'capitaine-cursors'
   'ddcutil'
   'fastfetch'
-  'gdk-pixbuf2'
   'gsettings-desktop-schemas'
   'imagemagick'
   'iw'
@@ -41,7 +40,6 @@ depends=(
   'ttf-jetbrains-mono'
   'ttf-onest'
   'upower'
-  'zenity'
 )
 backup=(
   'etc/xdg/kitty/kitty.conf'
@@ -50,14 +48,14 @@ backup=(
   'etc/xdg/gtk-4.0/settings.ini'
 )
 
-_commit=b652dd48abaf965b56295dae9bd093ae8ade0ae6
+_commit=3ce41ea5a99ce60c653c44d28f5a28704427cc79
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('9ba9ed9436992f80f4b6b275b3fbadb068643e233763b231d65ecdeff1623b5e')
+sha256sums=('e1a899c43f0970776d981e6780c7d7773d74661697b2174d51b93f40727521b9')
 
 package() {
   cd "pond-interface-$_commit"
   find shell -type f \( -name '*.qml' -o -name '*.js' -o -name 'qmldir' \
-    -o -name '*.svg' -o -name '*.png' -o -name '*.py' \) \
+    -o -name '*.svg' -o -name '*.png' -o -name '*.py' -o -name '*.qsb' \) \
     -exec install -Dm644 '{}' "$pkgdir/usr/share/pond-interface/{}" \;
   install -d "$pkgdir/etc/xdg/quickshell"
   ln -s /usr/share/pond-interface/shell "$pkgdir/etc/xdg/quickshell/pond-shell"

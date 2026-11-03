@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-lockscreen
-pkgver=0.1.1
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Pond session lock and SDDM greeter'
 arch=('x86_64')
@@ -21,20 +21,21 @@ depends=(
   'quickshell>=0.3.1'
   'systemd'
   'ttf-onest'
+  'wayland'
   'sddm'
   'niri'
 )
 makedepends=('cmake' 'ninja' 'qt6-shadertools')
 
-_commit=ca80993aad9ef9ac4f572669b7ea29cf26fe0e1d
+_commit=3ce41ea5a99ce60c653c44d28f5a28704427cc79
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('294fe181cd2117a2bcdecfd7b7ac3abda601cdc1289dfcec802b834574423d9b')
+sha256sums=('e1a899c43f0970776d981e6780c7d7773d74661697b2174d51b93f40727521b9')
 
 build() {
   cmake -S "pond-interface-$_commit" -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-  cmake --build build --target pond_wifi_statusplugin
+  cmake --build build --target pond_systemplugin
   /usr/lib/qt6/bin/qsb --qt6 -o build/soft-light.frag.qsb \
     "pond-interface-$_commit/lockscreen/frontend/shaders/soft-light.frag"
 }
@@ -49,10 +50,10 @@ package() {
     "$destination/lockscreen/frontend/shaders/soft-light.frag.qsb"
   install -Dm644 lockscreen/greeter/{metadata.desktop,niri.kdl} -t "$destination/lockscreen/greeter"
   install -Dm644 lockscreen/greeter/sddm.conf "$pkgdir/usr/lib/sddm/sddm.conf.d/pond-lockscreen.conf"
-  install -Dm755 "$srcdir/build/libpond_wifi_status.so" "$srcdir/build/Pond/WifiStatus/libpond_wifi_statusplugin.so" \
-    -t "$pkgdir/usr/lib/qt6/qml/Pond/WifiStatus"
-  install -Dm644 "$srcdir/build/Pond/WifiStatus/"{qmldir,pond_wifi_status.qmltypes} \
-    -t "$pkgdir/usr/lib/qt6/qml/Pond/WifiStatus"
+  install -Dm755 "$srcdir/build/libpond_system.so" "$srcdir/build/Pond/System/libpond_systemplugin.so" \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/System"
+  install -Dm644 "$srcdir/build/Pond/System/"{qmldir,pond_system.qmltypes} \
+    -t "$pkgdir/usr/lib/qt6/qml/Pond/System"
   install -d "$pkgdir/etc/xdg/quickshell"
   ln -s /usr/share/pond-interface/lockscreen "$pkgdir/etc/xdg/quickshell/pond-lockscreen"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

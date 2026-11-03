@@ -1,15 +1,20 @@
 pkgbase = pond-wallpaper
 	pkgdesc = Wallpaper manager for Pond
-	pkgver = 0.1.1
+	pkgver = 0.2.0
 	pkgrel = 1
 	url = https://github.com/bflycomputer/pond-interface
 	arch = any
 	license = BSD-3-Clause
 	makedepends = qt6-shadertools
+	depends = python
+	depends = python-pyqt6
 	depends = qt6-declarative
+	depends = qt6-imageformats
+	depends = qt6-svg
 	depends = qt6-wayland
 	depends = quickshell
-	source = pond-interface-3df68ac7d283b887c8fd82cd6778a6e9339f340b.tar.gz::https://github.com/bflycomputer/pond-interface/archive/3df68ac7d283b887c8fd82cd6778a6e9339f340b.tar.gz
-	sha256sums = 8ec59d796e3098996756a59a985c2c93f9459f903da98965eb62cc9ba420e24a
+	depends = zenity
+	source = pond-interface-3ce41ea5a99ce60c653c44d28f5a28704427cc79.tar.gz::https://github.com/bflycomputer/pond-interface/archive/3ce41ea5a99ce60c653c44d28f5a28704427cc79.tar.gz
+	sha256sums = e1a899c43f0970776d981e6780c7d7773d74661697b2174d51b93f40727521b9
 
 pkgname = pond-wallpaper
