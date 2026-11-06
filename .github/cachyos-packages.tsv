@@ -8,5 +8,6 @@ mesa/lib32-mesa	mesa/lib32-mesa
 mesa/mesa	mesa/mesa
 nvidia	nvidia
 pacutils	pacutils
+pahole	pahole
 paru	paru
 power-profiles-daemon	power-profiles-daemon
