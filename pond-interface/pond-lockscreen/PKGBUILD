@@ -1,7 +1,7 @@
 # Maintainer: Ammar Hossain <ammar@butterfly.so>
 
 pkgname=pond-lockscreen
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc='Pond session lock and SDDM greeter'
 arch=('x86_64')
@@ -25,19 +25,17 @@ depends=(
   'sddm'
   'niri'
 )
-makedepends=('cmake' 'ninja' 'qt6-shadertools')
+makedepends=('cmake' 'ninja')
 
-_commit=3ce41ea5a99ce60c653c44d28f5a28704427cc79
+_commit=5d6fc5c8df6b15a79fd3905f65402fdaeaee9cf0
 source=("pond-interface-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('e1a899c43f0970776d981e6780c7d7773d74661697b2174d51b93f40727521b9')
+sha256sums=('3c6df2a3293fabfbe450179083c098db66b87995170388540b6b23ddcd3f93a5')
 
 build() {
   cmake -S "pond-interface-$_commit" -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
   cmake --build build --target pond_systemplugin
-  /usr/lib/qt6/bin/qsb --qt6 -o build/soft-light.frag.qsb \
-    "pond-interface-$_commit/lockscreen/frontend/shaders/soft-light.frag"
 }
 
 package() {
@@ -46,8 +44,6 @@ package() {
 
   find lockscreen -type f \( -name '*.qml' -o -name '*.js' -o -name '*.png' -o -name '*.svg' \) \
     -exec install -Dm644 '{}' "$destination/{}" \;
-  install -Dm644 "$srcdir/build/soft-light.frag.qsb" \
-    "$destination/lockscreen/frontend/shaders/soft-light.frag.qsb"
   install -Dm644 lockscreen/greeter/{metadata.desktop,niri.kdl} -t "$destination/lockscreen/greeter"
   install -Dm644 lockscreen/greeter/sddm.conf "$pkgdir/usr/lib/sddm/sddm.conf.d/pond-lockscreen.conf"
   install -Dm755 "$srcdir/build/libpond_system.so" "$srcdir/build/Pond/System/libpond_systemplugin.so" \
