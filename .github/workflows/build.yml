@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest-96core
+    runs-on: ubuntu-latest
     outputs:
       package_base: ${{ steps.package.outputs.base }}
     container:
