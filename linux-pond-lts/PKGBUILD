@@ -150,7 +150,7 @@ _minor=55
 #_rcver=rc8
 pkgver=${_major}.${_minor}
 _tagrel=1
-pkgrel=5
+pkgrel=6
 _stable=${_major}.${_minor}
 #_stable=${_major}
 #_stablerc=${_major}-${_rcver}
@@ -321,7 +321,7 @@ prepare() {
     ### Enable KCFI
     if [ "$_use_kcfi" = "yes" ]; then
         echo "Enabling kCFI"
-        scripts/config -e ARCH_SUPPORTS_CFI_CLANG -e CFI_CLANG -e CFI_AUTO_DEFAULT
+        scripts/config -e CFI
     fi
 
     ### Select LLVM level
