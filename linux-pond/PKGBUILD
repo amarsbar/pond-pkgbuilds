@@ -180,7 +180,7 @@ _minor=1
 #_rcver=rc8
 pkgver=${_major}.${_minor}
 _tagrel=1
-pkgrel=3
+pkgrel=4
 _srcname=cachyos-${_major}.${_minor}-${_tagrel}
 pkgdesc='Linux kernel with the selected downstream scheduler and performance patch set for Pond.'
 _kernver="$pkgver-$pkgrel"
@@ -212,7 +212,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=615.78.08
+_nv_ver=620.70.06
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 _nv_580xx_ver=580.196.07
@@ -228,7 +228,9 @@ validpgpkeys=(
 
 # LLVM makedepends
 if _is_lto_kernel; then
-    makedepends+=(clang llvm lld)
+    # pahole needs the --lang_exclude fix for merged LTO CUs to generate
+    # BTF for Rust modules
+    makedepends+=(clang llvm lld 'pahole>=1:1.32-2')
     source+=("${_patchsource}/misc/dkms-clang.patch")
     BUILD_FLAGS=(
         CC=clang
@@ -379,12 +381,10 @@ prepare() {
 
     echo "Selecting '$_use_llvm_lto' LLVM level..."
 
-    if ! _is_lto_kernel; then
-        echo "Enabling QR Code Panic for GCC Kernels"
-        scripts/config --set-str DRM_PANIC_SCREEN qr_code -e DRM_PANIC_SCREEN_QR_CODE \
-            --set-str DRM_PANIC_SCREEN_QR_CODE_URL https://panic.archlinux.org/panic_report# \
-            --set-val CONFIG_DRM_PANIC_SCREEN_QR_VERSION 40
-    fi
+    echo "Enabling QR Code Panic"
+    scripts/config --set-str DRM_PANIC_SCREEN qr_code -e DRM_PANIC_SCREEN_QR_CODE \
+        --set-str DRM_PANIC_SCREEN_QR_CODE_URL https://panic.archlinux.org/panic_report# \
+        --set-val CONFIG_DRM_PANIC_SCREEN_QR_VERSION 40
 
     ### Select tick rate
     case "$_HZ_ticks" in
@@ -650,7 +650,7 @@ _package-headers() {
     provides=(LINUX-HEADERS)
 
     if _is_lto_kernel; then
-        depends+=(clang llvm lld)
+        depends+=(clang llvm lld 'pahole>=1:1.32-2')
     fi
 
     cd "${_srcname}"
@@ -863,7 +863,7 @@ b2sums=('b744477e1202ae7c63020645fdd923625da6edd2bde61d01d9c7755e6d9628fc3fb00e6
         'SKIP'
         '6cb0d0b6517eb2be80b590bb5315351779e652540c778b1e844d6f2e9f9a2965317673e52eb7e871469ed57a4384d0e54d350f3bf4e1d4dc28d9a92fb176a52f'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e'
-        '7a73f396965056bf7ca8506e37cb7719bfcc2a79e8c44a7477a038cf39ca7630c6de96b42d8d56e23640d40b80f6fa8dde20bdb843832913de3d0f93f650ce68'
+        'b0bb5f8a23765c73fb59febe23bf649fc10ad0cfc822ed8bcae0578915711ec24123bdca7d0c132a8196d679d350353cfad13d15b21dd9cf315c3cd074809646'
         '43386fb36a975bd5215d477bd2e11d91adbdc20393b9898788ee5734834aaeb6af83e8e493a0d20f6bd7fd6ecbff124f7877ede44c3beafb007b9c7effa44fe6'
         '8106fe252012ca17f32c56877a98e047befe15c71adc0e6c97927760e08bfe7f78a8b71721470564514328c470f26345ec81796bd9dedd47a6c330d57205fae8'
         '4731aa2e4bff627c27f61e9ef31a01bf33611b85085a35859b3ed5c903e9e3457ce78b1a7f471f7253b3c4f51ce8914dc299b36c552067ebbc77db091c90c502')
