@@ -230,7 +230,8 @@ validpgpkeys=(
 if _is_lto_kernel; then
     # pahole needs the --lang_exclude fix for merged LTO CUs to generate
     # BTF for Rust modules
-    makedepends+=(clang llvm lld 'pahole>=1:1.32-2')
+    makedepends=("${makedepends[@]/#pahole/pahole>=1:1.32-2}")
+    makedepends+=(clang llvm lld)
     source+=("${_patchsource}/misc/dkms-clang.patch")
     BUILD_FLAGS=(
         CC=clang
@@ -650,7 +651,8 @@ _package-headers() {
     provides=(LINUX-HEADERS)
 
     if _is_lto_kernel; then
-        depends+=(clang llvm lld 'pahole>=1:1.32-2')
+        depends=("${depends[@]/#pahole/pahole>=1:1.32-2}")
+        depends+=(clang llvm lld)
     fi
 
     cd "${_srcname}"
